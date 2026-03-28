@@ -32,7 +32,7 @@ export default function SearchBar({ value, onChange }: SearchBarProps) {
 			</div>
 
 			{/* Search button */}
-			<button className="px-8 py-4 bg-basepoint-teal text-white rounded-xl font-semibold hover:bg-teal-500 transition">
+			<button className="px-8 py-4 cursor-pointer bg-basepoint-teal text-white rounded-xl font-semibold hover:bg-teal-500 transition">
 				Search
 			</button>
 		</div>

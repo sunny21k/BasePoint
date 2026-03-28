@@ -9,6 +9,8 @@ import DashboardPayment from "./pages/DashboardPages/DashboardPayment";
 import DashboardSettings from "./pages/DashboardPages/DashboardSettings";
 import Subscriptions from "./pages/DashboardPages/SubscriptionPage";
 import Search from "./pages/Search";
+import BusinessLogin from "./pages/BusinessLogin";
+import CustomerLogin from "./pages/CustomerLogin";
 
 function App() {
 	return (
@@ -20,6 +22,10 @@ function App() {
 
 				{/* Business onboarding */}
 				<Route path="/business/signup" element={<BusinessSignup />} />
+
+				<Route path="/business/login" element={<BusinessLogin />} />
+
+				<Route path="/customer/login" element={<CustomerLogin />} />
 
 				{/* Business dashboard (sidebar tabs) */}
 				<Route path="/business/dashboard" element={<DashboardOverviewPage />} />
