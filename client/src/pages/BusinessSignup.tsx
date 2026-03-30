@@ -55,87 +55,90 @@ export default function BusinessSignup() {
 	const prevStep = () => setCurrentStep((prev) => Math.max(prev - 1, 1));
 
 	return (
-		<div className="min-h-screen bg-[#050609] text-white">
-			{/* Header */}
-			<nav className="border-b border-white/5">
-				<div className="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-					<Link to="/" className="flex items-center gap-2">
-						<div className="w-8 h-8 bg-basepoint-teal/20 rounded-lg flex items-center justify-center">
-							<span className="text-basepoint-teal font-bold text-sm">BP</span>
+		<div className="min-h-screen bg-[radial-gradient(circle_at_top,rgba(16,185,129,0.12),transparent_28%),linear-gradient(180deg,#f8fafc_0%,#ecfeff_46%,#ffffff_100%)] text-slate-900">
+			<nav className="border-b border-slate-200/80 bg-white/75 backdrop-blur">
+				<div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
+					<Link to="/" className="flex items-center gap-3">
+						<div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-600 to-teal-500 text-sm font-bold text-white shadow-sm">
+							BP
 						</div>
-						<span className="text-xl font-bold">BasePoint</span>
+						<span className="text-xl font-bold tracking-tight text-slate-900">
+							BasePoint
+						</span>
 					</Link>
+
 					<Link
 						to="/business/login"
-						className="text-sm text-gray-400 hover:text-white transition">
+						className="text-sm text-slate-500 transition hover:text-emerald-700">
 						Already have an account?{" "}
-						<span className="text-basepoint-teal font-semibold">Log in</span>
+						<span className="font-semibold text-emerald-700">Log in</span>
 					</Link>
 				</div>
 			</nav>
 
-			{/* Main Content */}
-			<div className="max-w-4xl mx-auto px-6 py-12">
-				<StepIndicator currentStep={currentStep} totalSteps={6} />
+			<main className="mx-auto max-w-5xl px-6 py-12 lg:py-14">
+				<div className="rounded-[2rem] border border-slate-200 bg-white/85 p-6 shadow-[0_20px_60px_rgba(15,23,42,0.08)] backdrop-blur-sm lg:p-8">
+					<StepIndicator currentStep={currentStep} totalSteps={6} />
 
-				<div className="mt-8">
-					{currentStep === 1 && (
-						<Step1Account
-							data={{
-								email: formData.email,
-								password: formData.password,
-								businessName: formData.businessName,
-							}}
-							onUpdate={updateField}
-							onNext={nextStep}
-						/>
-					)}
+					<div className="mt-8">
+						{currentStep === 1 && (
+							<Step1Account
+								data={{
+									email: formData.email,
+									password: formData.password,
+									businessName: formData.businessName,
+								}}
+								onUpdate={updateField}
+								onNext={nextStep}
+							/>
+						)}
 
-					{currentStep === 2 && (
-						<Step2Category
-							data={{ category: formData.category }}
-							onUpdate={updateField}
-							onNext={nextStep}
-							onBack={prevStep}
-						/>
-					)}
+						{currentStep === 2 && (
+							<Step2Category
+								data={{ category: formData.category }}
+								onUpdate={updateField}
+								onNext={nextStep}
+								onBack={prevStep}
+							/>
+						)}
 
-					{currentStep === 3 && (
-						<Step3Details
-							data={{
-								address: formData.address,
-								phone: formData.phone,
-								description: formData.description,
-							}}
-							onUpdate={updateField}
-							onNext={nextStep}
-							onBack={prevStep}
-						/>
-					)}
+						{currentStep === 3 && (
+							<Step3Details
+								data={{
+									address: formData.address,
+									phone: formData.phone,
+									description: formData.description,
+								}}
+								onUpdate={updateField}
+								onNext={nextStep}
+								onBack={prevStep}
+							/>
+						)}
 
-					{currentStep === 4 && (
-						<Step4Service
-							data={{ services: formData.services }}
-							onUpdate={updateField}
-							onNext={nextStep}
-							onBack={prevStep}
-						/>
-					)}
+						{currentStep === 4 && (
+							<Step4Service
+								data={{ services: formData.services }}
+								onUpdate={updateField}
+								onNext={nextStep}
+								onBack={prevStep}
+							/>
+						)}
 
-					{currentStep === 5 && (
-						<Step5Hours
-							data={{ hours: formData.hours }}
-							onUpdate={updateField}
-							onNext={nextStep}
-							onBack={prevStep}
-						/>
-					)}
+						{currentStep === 5 && (
+							<Step5Hours
+								data={{ hours: formData.hours }}
+								onUpdate={updateField}
+								onNext={nextStep}
+								onBack={prevStep}
+							/>
+						)}
 
-					{currentStep === 6 && (
-						<Step6Success businessName={formData.businessName} />
-					)}
+						{currentStep === 6 && (
+							<Step6Success businessName={formData.businessName} />
+						)}
+					</div>
 				</div>
-			</div>
+			</main>
 		</div>
 	);
 }

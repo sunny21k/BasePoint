@@ -6,73 +6,85 @@ export default function DashboardPreview() {
 	);
 
 	return (
-		<div className="hidden rounded-2xl border border-white/10 bg-[#05080f]/90 p-4 shadow-[0_24px_80px_rgba(0,0,0,0.85)] backdrop-blur sm:block">
-			<div className="mb-2 flex items-center justify-between text-[11px] text-gray-400">
-				<span className="rounded-full bg-white/5 px-2 py-0.5">
-					Example views (mock data)
+		<div className="hidden sm:block rounded-[2rem] border border-slate-200/70 bg-white/80 p-6 backdrop-blur-xl shadow-[0_25px_80px_rgba(15,23,42,0.12)]">
+			{/* Top Bar */}
+			<div className="mb-6 flex items-center justify-between text-xs">
+				<span className="rounded-full bg-gradient-to-r from-sky-500/10 to-blue-500/10 px-3 py-1 font-medium text-sky-700">
+					Sample dashboard
 				</span>
-				<span className="text-gray-500">What BasePoint can look like</span>
+				<span className="text-slate-400">Live preview</span>
 			</div>
 
-			{/* Tabs */}
-			<div className="mb-4 inline-flex rounded-full bg-white/5 p-1 text-xs">
+			{/* Toggle */}
+			<div className="mb-6 inline-flex rounded-full bg-slate-100/80 p-1 text-xs backdrop-blur">
 				<button
 					type="button"
 					onClick={() => setActiveView("customer")}
-					className={`rounded-full px-3 py-1 text-[11px] font-medium transition ${
+					className={`rounded-full px-4 py-1.5 font-medium transition ${
 						activeView === "customer"
-							? "bg-white text-gray-900 shadow-sm"
-							: "text-gray-300 hover:text-white"
+							? "bg-white text-slate-900 shadow"
+							: "text-slate-500 hover:text-slate-900"
 					}`}>
-					Customer view
+					Customer
 				</button>
 				<button
 					type="button"
 					onClick={() => setActiveView("business")}
-					className={`rounded-full px-3 py-1 text-[11px] font-medium transition ${
+					className={`rounded-full px-4 py-1.5 font-medium transition ${
 						activeView === "business"
-							? "bg-white text-gray-900 shadow-sm"
-							: "text-gray-300 hover:text-white"
+							? "bg-white text-slate-900 shadow"
+							: "text-slate-500 hover:text-slate-900"
 					}`}>
-					Business view
+					Business
 				</button>
 			</div>
 
-			{/* Customer view */}
+			{/* CUSTOMER VIEW */}
 			{activeView === "customer" && (
-				<>
-					<div className="flex items-center justify-between pb-3">
-						<span className="text-xs font-medium uppercase tracking-wide text-gray-400">
-							Today&apos;s schedule
-						</span>
-						<span className="rounded-full bg-emerald-400/10 px-3 py-1 text-xs font-medium text-emerald-300">
-							Low no‑shows • Auto reminders
+				<div>
+					<div className="mb-5 flex items-center justify-between">
+						<div>
+							<p className="text-xs font-semibold uppercase tracking-wider text-slate-400">
+								Upcoming
+							</p>
+							<p className="mt-1 text-sm text-slate-600">
+								Your next confirmed bookings
+							</p>
+						</div>
+						<span className="rounded-full bg-emerald-50 px-3 py-1 text-xs font-medium text-emerald-700">
+							Reminders on
 						</span>
 					</div>
 
 					<div className="space-y-3">
 						{[
 							{
-								label: "9:00 AM • Fade & beard trim",
+								time: "9:00 AM",
+								title: "Fade & beard trim",
 								name: "Andre Brooks",
-								amount: 55,
+								status: "Paid",
+								amount: "$55",
 							},
 							{
-								label: "12:30 PM • PT session",
+								time: "12:30 PM",
+								title: "PT session",
 								name: "Jenna Smith",
-								amount: 80,
+								status: "Paid",
+								amount: "$80",
 							},
 							{
-								label: "4:00 PM • Hydrating facial",
+								time: "4:00 PM",
+								title: "Hydrating facial",
 								name: "Lola Martinez",
-								amount: 95,
+								status: "Paid",
+								amount: "$95",
 							},
 						].map((item, index) => (
 							<div
 								key={index}
-								className="flex items-center justify-between rounded-xl border border-white/5 bg-white/5 px-3 py-3 text-sm">
+								className="group flex items-center justify-between rounded-2xl border border-slate-200/70 bg-white px-4 py-4 shadow-sm transition hover:shadow-md">
 								<div className="flex items-center gap-3">
-									<div className="flex h-9 w-9 items-center justify-center rounded-lg bg-basepoint-teal/15 text-xs font-semibold text-basepoint-teal">
+									<div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-sky-100 to-blue-100 text-xs font-semibold text-sky-700">
 										{item.name
 											.split(" ")
 											.map((n) => n[0])
@@ -80,108 +92,91 @@ export default function DashboardPreview() {
 											.slice(0, 2)
 											.toUpperCase()}
 									</div>
+
 									<div>
-										<p className="text-sm font-medium text-white">
-											{item.label}
+										<p className="text-sm font-semibold text-slate-900">
+											{item.time} · {item.title}
 										</p>
-										<p className="text-xs text-gray-400">
-											{item.name} •{" "}
-											<span className="text-emerald-300">Paid online</span>
+										<p className="text-xs text-slate-500">
+											{item.name} ·{" "}
+											<span className="text-emerald-600">{item.status}</span>
 										</p>
 									</div>
 								</div>
-								<span className="text-xs font-semibold text-gray-100">
-									${item.amount}
+
+								<span className="text-sm font-semibold text-slate-900">
+									{item.amount}
 								</span>
 							</div>
 						))}
 					</div>
-
-					<p className="mt-2 text-[11px] text-gray-500">
-						Example of how confirmed appointments look to your clients once they
-						book.
-					</p>
-				</>
+				</div>
 			)}
 
-			{/* Business view */}
+			{/* BUSINESS VIEW */}
 			{activeView === "business" && (
-				<>
-					<div className="flex items-center justify-between pb-3">
-						<span className="text-xs font-medium uppercase tracking-wide text-gray-400">
-							Business overview
-						</span>
-						<span className="rounded-full bg-basepoint-teal/15 px-3 py-1 text-xs font-medium text-teal-300">
-							At a glance
-						</span>
-					</div>
-
-					{/* Top metrics */}
-					<div className="grid grid-cols-2 gap-3 text-xs">
-						<div className="rounded-xl bg-white/5 px-3 py-3">
-							<p className="text-gray-400">This week&apos;s revenue</p>
-							<p className="mt-1 text-sm font-semibold text-white">$3,270</p>
-							<p className="mt-1 text-[11px] text-emerald-300">
-								+18% vs last week
+				<div>
+					<div className="mb-5 flex items-center justify-between">
+						<div>
+							<p className="text-xs font-semibold uppercase tracking-wider text-slate-400">
+								Overview
+							</p>
+							<p className="mt-1 text-sm text-slate-600">
+								Key metrics at a glance
 							</p>
 						</div>
-						<div className="rounded-xl bg-white/5 px-3 py-3">
-							<p className="text-gray-400">New clients this month</p>
-							<p className="mt-1 text-sm font-semibold text-teal-300">+28</p>
-							<p className="mt-1 text-[11px] text-gray-400">
-								Mostly from Instagram
+						<span className="rounded-full bg-sky-50 px-3 py-1 text-xs font-medium text-sky-700">
+							Live data
+						</span>
+					</div>
+
+					<div className="grid gap-3 sm:grid-cols-2">
+						<div className="rounded-2xl border border-slate-200/70 bg-gradient-to-br from-white to-slate-50 p-4 shadow-sm">
+							<p className="text-xs text-slate-500">Weekly revenue</p>
+							<p className="mt-2 text-2xl font-semibold text-slate-900">
+								$3,270
+							</p>
+							<p className="mt-1 text-sm text-emerald-600">+18% growth</p>
+						</div>
+
+						<div className="rounded-2xl border border-slate-200/70 bg-gradient-to-br from-white to-slate-50 p-4 shadow-sm">
+							<p className="text-xs text-slate-500">New clients</p>
+							<p className="mt-2 text-2xl font-semibold text-slate-900">28</p>
+							<p className="mt-1 text-sm text-slate-500">
+								Top source: Instagram
 							</p>
 						</div>
 					</div>
 
-					{/* Upcoming + popular service */}
-					<div className="mt-3 grid gap-3 text-[11px] text-gray-300 sm:grid-cols-2">
-						<div className="rounded-xl bg-white/5 px-3 py-3">
-							<p className="text-gray-400">Upcoming today</p>
-							<div className="mt-1 flex items-center justify-between">
-								<span>6 bookings</span>
-								<span className="font-medium text-emerald-300">
-									Fully booked 3–6 PM
+					<div className="mt-3 space-y-3">
+						<div className="rounded-2xl border border-slate-200/70 bg-white p-4 shadow-sm">
+							<div className="flex items-center justify-between">
+								<span className="text-sm font-medium text-slate-900">
+									Today’s bookings
 								</span>
+								<span className="text-sm text-emerald-600">6</span>
 							</div>
+							<p className="mt-2 text-sm text-slate-500">
+								Peak hours: 3 PM – 6 PM
+							</p>
 						</div>
-						<div className="rounded-xl bg-white/5 px-3 py-3">
-							<p className="text-gray-400">Most booked service</p>
-							<div className="mt-1 flex items-center justify-between">
-								<span>Fade & beard trim</span>
-								<span className="font-medium text-teal-300">
-									42% of bookings
+
+						<div className="rounded-2xl border border-slate-200/70 bg-white p-4 shadow-sm">
+							<div className="flex items-center justify-between">
+								<span className="text-sm font-medium text-slate-900">
+									Top service
 								</span>
+								<span className="text-sm text-sky-600">42%</span>
 							</div>
+							<p className="mt-2 text-sm text-slate-500">Fade & beard trim</p>
 						</div>
 					</div>
-
-					{/* Health strip */}
-					<div className="mt-3 space-y-2 text-[11px] text-gray-300">
-						<div className="flex items-center justify-between rounded-lg bg-white/5 px-3 py-2">
-							<span>No‑show rate (30 days)</span>
-							<span className="font-medium text-emerald-300">1.2%</span>
-						</div>
-						<div className="flex items-center justify-between rounded-lg bg-white/5 px-3 py-2">
-							<span>Repeat clients</span>
-							<span className="font-medium text-teal-300">72%</span>
-						</div>
-						<div className="flex items-center justify-between rounded-lg bg-white/5 px-3 py-2">
-							<span>Average ticket value</span>
-							<span className="font-medium text-gray-100">$68.40</span>
-						</div>
-					</div>
-
-					<p className="mt-2 text-[11px] text-gray-500">
-						Example of the kind of high‑level stats you see as bookings and
-						payments come in.
-					</p>
-				</>
+				</div>
 			)}
 
-			<p className="mt-2 text-[11px] text-gray-500">
-				Data shown is sample only. Your dashboard updates in real‑time as
-				customers book and pay.
+			{/* Footer */}
+			<p className="mt-6 text-xs text-slate-400">
+				Sample data — real dashboards update instantly as bookings come in.
 			</p>
 		</div>
 	);

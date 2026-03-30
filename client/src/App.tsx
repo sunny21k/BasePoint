@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Layout from "./pages/Layout";
 import Home from "./pages/Home";
 import BusinessSignup from "./pages/BusinessSignup";
 import DashboardOverviewPage from "./pages/Dashboard";
@@ -11,23 +12,24 @@ import Subscriptions from "./pages/DashboardPages/SubscriptionPage";
 import Search from "./pages/Search";
 import BusinessLogin from "./pages/BusinessLogin";
 import CustomerLogin from "./pages/CustomerLogin";
+import About from "./pages/About";
+import PricePage from "./pages/PricePage";
 
 function App() {
 	return (
 		<BrowserRouter>
 			<Routes>
-				<Route path="/" element={<Home />} />
+				<Route element={<Layout />}>
+					<Route path="/" element={<Home />} />
+					<Route path="/search" element={<Search />} />
+					<Route path="/about" element={<About />} />
+					<Route path="/pricing" element={<PricePage />} />
+				</Route>
 
-				<Route path="/search" element={<Search />} />
-
-				{/* Business onboarding */}
 				<Route path="/business/signup" element={<BusinessSignup />} />
-
 				<Route path="/business/login" element={<BusinessLogin />} />
-
 				<Route path="/customer/login" element={<CustomerLogin />} />
 
-				{/* Business dashboard (sidebar tabs) */}
 				<Route path="/business/dashboard" element={<DashboardOverviewPage />} />
 				<Route
 					path="/business/dashboard/calendar"
@@ -35,7 +37,6 @@ function App() {
 				/>
 				<Route path="/business/dashboard/clients" element={<ClientsPage />} />
 				<Route path="/business/dashboard/services" element={<Services />} />
-
 				<Route
 					path="/business/dashboard/subscriptions"
 					element={<Subscriptions />}

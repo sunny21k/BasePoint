@@ -1,20 +1,18 @@
 import { useEffect, useState } from "react";
-import Navbar from "../components/Navbar";
 import QuickStatsCard from "../components/dashboard/QuickStatsCard";
 import UpcomingBookingsCard from "../components/dashboard/UpcomingBookingsCard";
 import RevenueChart from "../components/dashboard/RevenueChart";
 import RepeatClientsChart from "../components/dashboard/RepeatClientsChart";
 import DashboardLayout from "../components/dashboard/DashboardLayout";
 
-// Minimal mock data structure
 type MockBooking = {
 	id: string;
 	clientName: string;
 	serviceName: string;
 	price: number;
 	status: "confirmed" | "completed" | "cancelled" | "no-show";
-	datetime: string; // ISO or "10:00 AM"
-	createdAt: string; // ISO for date math
+	datetime: string;
+	createdAt: string;
 };
 
 const mockBookings: MockBooking[] = [
@@ -59,25 +57,35 @@ const mockBookings: MockBooking[] = [
 export default function DashboardPage() {
 	const [bookings, setBookings] = useState<MockBooking[]>([]);
 
-	// Later: fetch from API
 	useEffect(() => {
-		// Just mock for now
 		setBookings(mockBookings);
 	}, []);
 
 	return (
 		<DashboardLayout>
-			<div>
-				<h1 className="text-2xl font-semibold">Overview</h1>
-				<p className="text-sm text-gray-400">
-					High‑level stats and recent activity.
-				</p>
+			<div className="mb-8 rounded-[1.75rem] border border-slate-200 bg-white/90 p-6 shadow-[0_20px_60px_rgba(15,23,42,0.08)] backdrop-blur-sm">
+				<div className="inline-flex items-center rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700">
+					Dashboard overview
+				</div>
+
+				<div className="mt-4">
+					<h1 className="text-3xl font-semibold tracking-tight text-slate-900">
+						Overview
+					</h1>
+					<p className="mt-2 text-sm text-slate-500">
+						High-level stats and recent activity.
+					</p>
+				</div>
 			</div>
 
-			<QuickStatsCard bookings={bookings} />
-			<UpcomingBookingsCard bookings={bookings} />
-			<RevenueChart bookings={bookings} />
-			<RepeatClientsChart bookings={bookings} />
+			<div className="space-y-6">
+				<QuickStatsCard bookings={bookings} />
+				<UpcomingBookingsCard bookings={bookings} />
+				<div className="grid gap-6 lg:grid-cols-2">
+					<RevenueChart bookings={bookings} />
+					<RepeatClientsChart bookings={bookings} />
+				</div>
+			</div>
 		</DashboardLayout>
 	);
 }

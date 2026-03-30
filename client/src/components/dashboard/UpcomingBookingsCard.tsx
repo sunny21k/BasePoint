@@ -13,7 +13,6 @@ interface UpcomingBookingsCardProps {
 	bookings: Booking[];
 }
 
-// Only show “live” appointments (not cancelled/no‑show)
 function filterUpcoming(bookings: Booking[]) {
 	return bookings.filter(
 		(b) => b.status === "confirmed" || b.status === "completed",
@@ -26,10 +25,10 @@ export default function UpcomingBookingsCard({
 	const upcoming = filterUpcoming(bookings);
 
 	return (
-		<div className="rounded-xl border border-white/10 bg-white/5 p-5">
+		<div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
 			<div className="mb-4 flex items-center justify-between">
-				<h2 className="text-lg font-semibold text-white">Upcoming today</h2>
-				<span className="rounded-full bg-emerald-400/10 px-2 py-1 text-xs font-medium text-emerald-300">
+				<h2 className="text-lg font-semibold text-slate-900">Upcoming today</h2>
+				<span className="rounded-full bg-emerald-50 px-3 py-1 text-xs font-medium text-emerald-700">
 					{upcoming.length} bookings
 				</span>
 			</div>
@@ -40,7 +39,7 @@ export default function UpcomingBookingsCard({
 						<BookingCard key={booking.id} booking={booking} />
 					))
 				) : (
-					<p className="text-sm text-gray-400">
+					<p className="text-sm text-slate-500">
 						No upcoming appointments today
 					</p>
 				)}

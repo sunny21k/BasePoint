@@ -10,14 +10,16 @@ interface MapViewProps {
 
 export default function MapView({ businesses }: MapViewProps) {
 	return (
-		<div className="h-[600px] rounded-xl border border-white/10 bg-white/5 flex items-center justify-center">
-			<div className="text-center">
-				<p className="text-gray-400 mb-2">Map view coming soon</p>
-				<p className="text-sm text-gray-500">
+		<div className="flex h-[600px] items-center justify-center rounded-[1.75rem] border border-slate-200 bg-white shadow-sm">
+			<div className="rounded-3xl border border-dashed border-emerald-200 bg-gradient-to-br from-emerald-50 via-white to-teal-50 px-8 py-10 text-center">
+				<p className="mb-2 text-lg font-semibold text-slate-900">
+					Map view coming soon
+				</p>
+				<p className="text-sm text-slate-500">
 					Showing {businesses.length} businesses on map
 				</p>
-				<p className="text-xs text-gray-600 mt-4">
-					(We'll integrate Google Maps or Mapbox here later)
+				<p className="mt-4 text-xs text-slate-400">
+					We&apos;ll integrate Google Maps or Mapbox here later.
 				</p>
 			</div>
 		</div>

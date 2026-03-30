@@ -30,155 +30,145 @@ export default function Payments() {
 
 	return (
 		<DashboardLayout>
-			<div>
-				<h1 className="text-2xl font-semibold text-white">Payments</h1>
-				<p className="mt-1 text-sm text-gray-400">
-					Manage how you accept payments and receive payouts.
-				</p>
-			</div>
+			<div className="rounded-[1.75rem] border border-slate-200 bg-white/90 p-6 shadow-[0_20px_60px_rgba(15,23,42,0.08)] backdrop-blur-sm">
+				<div>
+					<div className="inline-flex rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700">
+						Payments
+					</div>
+					<h1 className="mt-3 text-3xl font-semibold tracking-tight text-slate-900">
+						Payments
+					</h1>
+					<p className="mt-2 text-sm text-slate-500">
+						Manage how you accept payments and receive payouts.
+					</p>
+				</div>
 
-			<div className="mt-6 space-y-6">
-				<section className="rounded-xl border border-white/10 bg-white/5 p-5">
-					<div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-						<div>
-							<h2 className="text-sm font-semibold text-white">
-								Stripe connection
-							</h2>
-							<p className="mt-1 text-sm text-gray-400">
-								Connect Stripe to accept card payments and manage payouts.
-							</p>
+				<div className="mt-6 space-y-6">
+					<section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+						<div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+							<div>
+								<h2 className="text-sm font-semibold text-slate-900">
+									Stripe connection
+								</h2>
+								<p className="mt-1 text-sm text-slate-500">
+									Connect Stripe to accept card payments and manage payouts.
+								</p>
+							</div>
+
+							<span
+								className={`inline-flex w-fit rounded-full border px-2.5 py-1 text-xs font-medium ${
+									paymentSettings.stripeConnected
+										? "border-emerald-200 bg-emerald-50 text-emerald-700"
+										: "border-amber-200 bg-amber-50 text-amber-700"
+								}`}>
+								{paymentSettings.stripeConnected
+									? "Connected"
+									: "Not connected"}
+							</span>
 						</div>
 
-						<span
-							className={`inline-flex w-fit rounded-full border px-2.5 py-1 text-xs font-medium ${
-								paymentSettings.stripeConnected
-									? "border-emerald-400/30 bg-emerald-400/10 text-emerald-300"
-									: "border-amber-400/30 bg-amber-400/10 text-amber-300"
-							}`}>
-							{paymentSettings.stripeConnected ? "Connected" : "Not connected"}
-						</span>
-					</div>
-
-					<div className="mt-4 flex flex-wrap gap-3">
-						<button
-							type="button"
-							className="cursor-pointer rounded-xl border border-basepoint-teal/40 bg-basepoint-teal px-4 py-2 text-sm font-semibold text-white transition hover:border-basepoint-teal/60 hover:bg-teal-500 focus:outline-none focus:ring-1 focus:ring-basepoint-teal/40">
-							Connect Stripe
-						</button>
-						<button
-							type="button"
-							className="cursor-pointer rounded-xl border border-white/20 bg-white/5 px-4 py-2 text-sm text-white transition hover:border-white/30 hover:bg-white/10 focus:outline-none focus:ring-1 focus:ring-white/20">
-							Manage Stripe
-						</button>
-					</div>
-				</section>
-
-				<section className="rounded-xl border border-white/10 bg-white/5 p-5">
-					<h2 className="mb-4 text-sm font-semibold text-white">
-						Payout settings
-					</h2>
-					<div className="grid gap-4 md:grid-cols-2">
-						<div>
-							<label className="mb-1 block text-xs text-gray-400">
-								Payout method
-							</label>
-							<input
-								value={paymentSettings.payoutMethod}
-								onChange={(e) =>
-									setPaymentSettings({
-										...paymentSettings,
-										payoutMethod: e.target.value,
-									})
-								}
-								className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white outline-none transition focus:border-basepoint-teal focus:ring-1 focus:ring-basepoint-teal/30"
-								placeholder="Add bank account"
-							/>
+						<div className="mt-4 flex flex-wrap gap-3">
+							<button
+								type="button"
+								className="cursor-pointer rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:from-emerald-500 hover:to-teal-500">
+								Connect Stripe
+							</button>
+							<button
+								type="button"
+								className="cursor-pointer rounded-2xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-medium text-slate-700 shadow-sm transition hover:bg-slate-50">
+								Manage Stripe
+							</button>
 						</div>
+					</section>
 
-						<div>
-							<label className="mb-1 block text-xs text-gray-400">
-								Payout schedule
-							</label>
-							<select
-								value={paymentSettings.payoutSchedule}
-								onChange={(e) =>
-									setPaymentSettings({
-										...paymentSettings,
-										payoutSchedule: e.target.value as
-											| "daily"
-											| "weekly"
-											| "monthly",
-									})
-								}
-								className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-white outline-none transition focus:border-basepoint-teal focus:ring-1 focus:ring-basepoint-teal/30">
-								<option value="daily">Daily</option>
-								<option value="weekly">Weekly</option>
-								<option value="monthly">Monthly</option>
-							</select>
+					<section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+						<h2 className="mb-4 text-sm font-semibold text-slate-900">
+							Payout settings
+						</h2>
+						<div className="grid gap-4 md:grid-cols-2">
+							<div>
+								<label className="mb-1 block text-xs font-medium text-slate-600">
+									Payout method
+								</label>
+								<input
+									value={paymentSettings.payoutMethod}
+									onChange={(e) =>
+										setPaymentSettings({
+											...paymentSettings,
+											payoutMethod: e.target.value,
+										})
+									}
+									className="w-full rounded-2xl border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-900 shadow-sm outline-none transition placeholder:text-slate-400 focus:border-emerald-400 focus:ring-2 focus:ring-emerald-100"
+									placeholder="Add bank account"
+								/>
+							</div>
+
+							<div>
+								<label className="mb-1 block text-xs font-medium text-slate-600">
+									Payout schedule
+								</label>
+								<select
+									value={paymentSettings.payoutSchedule}
+									onChange={(e) =>
+										setPaymentSettings({
+											...paymentSettings,
+											payoutSchedule: e.target.value as
+												| "daily"
+												| "weekly"
+												| "monthly",
+										})
+									}
+									className="w-full rounded-2xl border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-900 shadow-sm outline-none transition focus:border-emerald-400 focus:ring-2 focus:ring-emerald-100">
+									<option value="daily">Daily</option>
+									<option value="weekly">Weekly</option>
+									<option value="monthly">Monthly</option>
+								</select>
+							</div>
 						</div>
-					</div>
-				</section>
+					</section>
 
-				<section className="rounded-xl border border-white/10 bg-white/5 p-5">
-					<h2 className="mb-4 text-sm font-semibold text-white">
-						Accepted payment methods
-					</h2>
-					<div className="space-y-3">
-						<label className="flex items-center justify-between gap-3 rounded-lg border border-white/10 bg-white/5 px-3 py-3">
-							<span className="text-sm text-gray-300">Card payments</span>
-							<input
-								type="checkbox"
-								checked={paymentSettings.cardPaymentsEnabled}
-								onChange={(e) =>
-									setPaymentSettings({
-										...paymentSettings,
-										cardPaymentsEnabled: e.target.checked,
-									})
-								}
-								className="h-4 w-4 cursor-pointer rounded border-white/20 bg-white/10 accent-basepoint-teal"
-							/>
-						</label>
+					<section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+						<h2 className="mb-4 text-sm font-semibold text-slate-900">
+							Accepted payment methods
+						</h2>
 
-						<label className="flex items-center justify-between gap-3 rounded-lg border border-white/10 bg-white/5 px-3 py-3">
-							<span className="text-sm text-gray-300">Apple Pay</span>
-							<input
-								type="checkbox"
-								checked={paymentSettings.applePayEnabled}
-								onChange={(e) =>
-									setPaymentSettings({
-										...paymentSettings,
-										applePayEnabled: e.target.checked,
-									})
-								}
-								className="h-4 w-4 cursor-pointer rounded border-white/20 bg-white/10 accent-basepoint-teal"
-							/>
-						</label>
+						<div className="space-y-3">
+							{[
+								["Card payments", "cardPaymentsEnabled"],
+								["Apple Pay", "applePayEnabled"],
+								["Google Pay", "googlePayEnabled"],
+							].map(([label, key]) => (
+								<label
+									key={label}
+									className="flex items-center justify-between gap-3 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3">
+									<span className="text-sm text-slate-700">{label}</span>
+									<input
+										type="checkbox"
+										checked={
+											paymentSettings[key as keyof PaymentSettings] as boolean
+										}
+										onChange={(e) =>
+											setPaymentSettings({
+												...paymentSettings,
+												[key]: e.target.checked,
+											} as PaymentSettings)
+										}
+										className="h-4 w-4 cursor-pointer rounded border-slate-300 text-emerald-600 focus:ring-emerald-200"
+									/>
+								</label>
+							))}
+						</div>
+					</section>
+				</div>
 
-						<label className="flex items-center justify-between gap-3 rounded-lg border border-white/10 bg-white/5 px-3 py-3">
-							<span className="text-sm text-gray-300">Google Pay</span>
-							<input
-								type="checkbox"
-								checked={paymentSettings.googlePayEnabled}
-								onChange={(e) =>
-									setPaymentSettings({
-										...paymentSettings,
-										googlePayEnabled: e.target.checked,
-									})
-								}
-								className="h-4 w-4 cursor-pointer rounded border-white/20 bg-white/10 accent-basepoint-teal"
-							/>
-						</label>
-					</div>
-				</section>
-			</div>
-
-			<div className="mt-6 flex justify-end">
-				<button
-					type="button"
-					onClick={handleSave}
-					className="cursor-pointer rounded-xl border border-basepoint-teal/40 bg-basepoint-teal px-5 py-2 text-sm font-semibold text-white transition hover:border-basepoint-teal/60 hover:bg-teal-500 focus:outline-none focus:ring-1 focus:ring-basepoint-teal/40">
-					Save payment settings
-				</button>
+				<div className="mt-6 flex justify-end">
+					<button
+						type="button"
+						onClick={handleSave}
+						className="cursor-pointer rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:from-emerald-500 hover:to-teal-500">
+						Save payment settings
+					</button>
+				</div>
 			</div>
 		</DashboardLayout>
 	);

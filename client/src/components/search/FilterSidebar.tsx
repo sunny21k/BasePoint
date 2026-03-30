@@ -1,5 +1,5 @@
-import { HiAdjustments, HiX, HiChevronDown, HiChevronUp } from "react-icons/hi";
 import { useState } from "react";
+import { HiAdjustments, HiX, HiChevronDown, HiChevronUp } from "react-icons/hi";
 
 interface FilterSidebarProps {
 	filters: {
@@ -78,60 +78,62 @@ export default function FilterSidebar({
 		filters.availability;
 
 	return (
-		<div className="w-80 flex-shrink-0">
+		<div className="w-full flex-shrink-0 lg:w-80">
 			<div className="sticky top-8 space-y-4">
-				{/* Header */}
-				<div className="flex items-center justify-between p-4 bg-gradient-to-r from-basepoint-teal/10 to-purple-500/10 border border-white/10 rounded-xl">
-					<div className="flex items-center gap-3">
-						<div className="w-10 h-10 bg-basepoint-teal/20 rounded-lg flex items-center justify-center">
-							<HiAdjustments className="w-5 h-5 text-basepoint-teal" />
+				<div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+					<div className="flex items-center justify-between">
+						<div className="flex items-center gap-3">
+							<div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-500 to-teal-500 text-white">
+								<HiAdjustments className="h-5 w-5" />
+							</div>
+							<div>
+								<h3 className="font-semibold text-slate-900">Filters</h3>
+								<p className="text-xs text-slate-500">Refine your search</p>
+							</div>
 						</div>
-						<div>
-							<h3 className="text-white font-bold">Filters</h3>
-							<p className="text-xs text-gray-400">Refine your search</p>
-						</div>
+
+						{hasActiveFilters && (
+							<button
+								onClick={() =>
+									onFilterChange({
+										category: "",
+										priceRange: "",
+										rating: "",
+										distance: 5,
+										availability: "",
+									})
+								}
+								className="cursor-pointer text-xs font-semibold text-emerald-700 hover:text-emerald-900">
+								Clear
+							</button>
+						)}
 					</div>
-					{hasActiveFilters && (
-						<button
-							onClick={() =>
-								onFilterChange({
-									category: "",
-									priceRange: "",
-									rating: "",
-									distance: 5,
-									availability: "",
-								})
-							}
-							className="text-xs text-basepoint-teal hover:text-teal-400 font-semibold flex items-center gap-1 transition">
-							<HiX className="w-3 h-3" />
-							Clear
-						</button>
-					)}
 				</div>
 
-				{/* Category */}
-				<div className="bg-white/5 border border-white/10 rounded-xl overflow-hidden">
+				<div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
 					<button
 						onClick={() => toggleSection("category")}
-						className="w-full px-4 py-3 flex items-center justify-between hover:bg-white/5 transition">
-						<span className="text-sm font-semibold text-white">Category</span>
+						className="flex w-full items-center justify-between px-4 py-3 hover:bg-slate-50">
+						<span className="text-sm font-semibold text-slate-900">
+							Category
+						</span>
 						{expandedSections.category ? (
-							<HiChevronUp className="w-4 h-4 text-gray-400" />
+							<HiChevronUp className="h-4 w-4 text-slate-400" />
 						) : (
-							<HiChevronDown className="w-4 h-4 text-gray-400" />
+							<HiChevronDown className="h-4 w-4 text-slate-400" />
 						)}
 					</button>
 
 					{expandedSections.category && (
-						<div className="px-2 pb-3 space-y-1">
+						<div className="space-y-1 px-2 pb-3">
 							{categories.map((cat) => (
 								<button
 									key={cat.id}
 									onClick={() => updateFilter("category", cat.id)}
-									className={`w-full px-3 py-2.5 rounded-lg text-left transition-all ${
+									className={`w-full cursor-pointer rounded-xl px-3 py-2.5 text-left transition ${
 										filters.category === cat.id
-											? "bg-basepoint-teal/20 border border-basepoint-teal/30"
-											: "hover:bg-white/5"
+											? "border border-emerald-200 bg-emerald-50"
+											: "hover:bg-slate-50"
 									}`}>
 									<div className="flex items-center justify-between">
 										<div className="flex items-center gap-2.5">
@@ -139,13 +141,13 @@ export default function FilterSidebar({
 											<span
 												className={`text-sm font-medium ${
 													filters.category === cat.id
-														? "text-basepoint-teal"
-														: "text-gray-300"
+														? "text-emerald-700"
+														: "text-slate-700"
 												}`}>
 												{cat.name}
 											</span>
 										</div>
-										<span className="text-xs text-gray-500">{cat.count}</span>
+										<span className="text-xs text-slate-400">{cat.count}</span>
 									</div>
 								</button>
 							))}
@@ -153,79 +155,77 @@ export default function FilterSidebar({
 					)}
 				</div>
 
-				{/* Price Range */}
-				<div className="bg-white/5 border border-white/10 rounded-xl overflow-hidden">
+				<div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
 					<button
 						onClick={() => toggleSection("price")}
-						className="w-full px-4 py-3 flex items-center justify-between hover:bg-white/5 transition">
-						<span className="text-sm font-semibold text-white">
+						className="flex w-full items-center justify-between px-4 py-3 hover:bg-slate-50">
+						<span className="text-sm font-semibold text-slate-900">
 							Price Range
 						</span>
 						{expandedSections.price ? (
-							<HiChevronUp className="w-4 h-4 text-gray-400" />
+							<HiChevronUp className="h-4 w-4 text-slate-400" />
 						) : (
-							<HiChevronDown className="w-4 h-4 text-gray-400" />
+							<HiChevronDown className="h-4 w-4 text-slate-400" />
 						)}
 					</button>
 
 					{expandedSections.price && (
-						<div className="px-2 pb-3 grid grid-cols-2 gap-2">
+						<div className="grid grid-cols-2 gap-2 px-3 pb-3">
 							{priceRanges.map((price) => (
 								<button
 									key={price.value}
 									onClick={() => updateFilter("priceRange", price.value)}
-									className={`px-3 py-3 rounded-lg transition-all text-center ${
+									className={`cursor-pointer rounded-xl border p-3 text-center transition ${
 										filters.priceRange === price.value
-											? "bg-basepoint-teal/20 border-2 border-basepoint-teal"
-											: "bg-white/5 border-2 border-white/10 hover:border-white/20"
+											? "border-emerald-300 bg-emerald-50"
+											: "border-slate-200 bg-white hover:bg-slate-50"
 									}`}>
 									<div
-										className={`text-base font-bold mb-1 ${
+										className={`mb-1 text-base font-bold ${
 											filters.priceRange === price.value
-												? "text-basepoint-teal"
-												: "text-white"
+												? "text-emerald-700"
+												: "text-slate-900"
 										}`}>
 										{price.label}
 									</div>
-									<div className="text-xs text-gray-400">{price.desc}</div>
+									<div className="text-xs text-slate-500">{price.desc}</div>
 								</button>
 							))}
 						</div>
 					)}
 				</div>
 
-				{/* Rating */}
-				<div className="bg-white/5 border border-white/10 rounded-xl overflow-hidden">
+				<div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
 					<button
 						onClick={() => toggleSection("rating")}
-						className="w-full px-4 py-3 flex items-center justify-between hover:bg-white/5 transition">
-						<span className="text-sm font-semibold text-white">
+						className="flex w-full items-center justify-between px-4 py-3 hover:bg-slate-50">
+						<span className="text-sm font-semibold text-slate-900">
 							Minimum Rating
 						</span>
 						{expandedSections.rating ? (
-							<HiChevronUp className="w-4 h-4 text-gray-400" />
+							<HiChevronUp className="h-4 w-4 text-slate-400" />
 						) : (
-							<HiChevronDown className="w-4 h-4 text-gray-400" />
+							<HiChevronDown className="h-4 w-4 text-slate-400" />
 						)}
 					</button>
 
 					{expandedSections.rating && (
-						<div className="px-2 pb-3 space-y-2">
+						<div className="space-y-2 px-3 pb-3">
 							{ratings.map((rating) => (
 								<button
 									key={rating.value}
 									onClick={() => updateFilter("rating", rating.value)}
-									className={`w-full px-3 py-2.5 rounded-lg transition-all ${
+									className={`w-full cursor-pointer rounded-xl border px-3 py-2.5 text-left transition ${
 										filters.rating === rating.value
-											? "bg-basepoint-teal/20 border border-basepoint-teal/30"
-											: "bg-white/5 hover:bg-white/10"
+											? "border-emerald-300 bg-emerald-50"
+											: "border-slate-200 bg-white hover:bg-slate-50"
 									}`}>
 									<div className="flex items-center justify-between">
 										<span
 											className={`text-sm font-medium ${
 												filters.rating === rating.value
-													? "text-basepoint-teal"
-													: "text-gray-300"
+													? "text-emerald-700"
+													: "text-slate-700"
 											}`}>
 											{rating.label}
 										</span>
@@ -236,7 +236,7 @@ export default function FilterSidebar({
 													className={`text-xs ${
 														i < Math.floor(rating.stars)
 															? "text-yellow-400"
-															: "text-gray-600"
+															: "text-slate-200"
 													}`}>
 													★
 												</span>
@@ -249,32 +249,31 @@ export default function FilterSidebar({
 					)}
 				</div>
 
-				{/* Distance */}
-				<div className="bg-white/5 border border-white/10 rounded-xl overflow-hidden">
+				<div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
 					<button
 						onClick={() => toggleSection("distance")}
-						className="w-full px-4 py-3 flex items-center justify-between hover:bg-white/5 transition">
-						<span className="text-sm font-semibold text-white">Distance</span>
+						className="flex w-full items-center justify-between px-4 py-3 hover:bg-slate-50">
+						<span className="text-sm font-semibold text-slate-900">
+							Distance
+						</span>
 						{expandedSections.distance ? (
-							<HiChevronUp className="w-4 h-4 text-gray-400" />
+							<HiChevronUp className="h-4 w-4 text-slate-400" />
 						) : (
-							<HiChevronDown className="w-4 h-4 text-gray-400" />
+							<HiChevronDown className="h-4 w-4 text-slate-400" />
 						)}
 					</button>
 
 					{expandedSections.distance && (
 						<div className="px-4 pb-4">
-							{/* Visual distance indicator */}
 							<div className="mb-4 text-center">
-								<div className="inline-flex items-center gap-2 px-4 py-2 bg-basepoint-teal/10 border border-basepoint-teal/30 rounded-full">
-									<span className="text-2xl font-bold text-basepoint-teal">
+								<div className="inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-4 py-2">
+									<span className="text-2xl font-bold text-emerald-700">
 										{filters.distance}
 									</span>
-									<span className="text-sm text-gray-300">miles</span>
+									<span className="text-sm text-slate-500">miles</span>
 								</div>
 							</div>
 
-							{/* Slider */}
 							<input
 								type="range"
 								min="1"
@@ -283,29 +282,29 @@ export default function FilterSidebar({
 								onChange={(e) =>
 									updateFilter("distance", parseInt(e.target.value))
 								}
-								className="w-full h-2 bg-white/10 rounded-lg appearance-none cursor-pointer accent-basepoint-teal"
+								className="h-2 w-full cursor-pointer appearance-none rounded-lg accent-emerald-600"
 								style={{
-									background: `linear-gradient(to right, rgb(20, 184, 166) 0%, rgb(20, 184, 166) ${
+									background: `linear-gradient(to right, rgb(16, 185, 129) 0%, rgb(16, 185, 129) ${
 										((filters.distance - 1) / 24) * 100
-									}%, rgba(255,255,255,0.1) ${((filters.distance - 1) / 24) * 100}%, rgba(255,255,255,0.1) 100%)`,
+									}%, rgb(226,232,240) ${((filters.distance - 1) / 24) * 100}%, rgb(226,232,240) 100%)`,
 								}}
 							/>
-							<div className="flex justify-between text-xs text-gray-500 mt-2">
+
+							<div className="mt-2 flex justify-between text-xs text-slate-400">
 								<span>1 mi</span>
 								<span>12 mi</span>
 								<span>25 mi</span>
 							</div>
 
-							{/* Quick distance buttons */}
-							<div className="grid grid-cols-3 gap-2 mt-3">
+							<div className="mt-3 grid grid-cols-3 gap-2">
 								{[2, 5, 10].map((dist) => (
 									<button
 										key={dist}
 										onClick={() => updateFilter("distance", dist)}
-										className={`px-2 py-1.5 rounded-lg text-xs font-medium transition ${
+										className={`cursor-pointer rounded-xl px-2 py-1.5 text-xs font-medium transition ${
 											filters.distance === dist
-												? "bg-basepoint-teal text-white"
-												: "bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white"
+												? "bg-gradient-to-r from-emerald-600 to-teal-600 text-white"
+												: "border border-slate-200 bg-white text-slate-600 hover:bg-slate-50"
 										}`}>
 										{dist} mi
 									</button>
@@ -315,39 +314,38 @@ export default function FilterSidebar({
 					)}
 				</div>
 
-				{/* Availability */}
-				<div className="bg-white/5 border border-white/10 rounded-xl overflow-hidden">
+				<div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
 					<button
 						onClick={() => toggleSection("availability")}
-						className="w-full px-4 py-3 flex items-center justify-between hover:bg-white/5 transition">
-						<span className="text-sm font-semibold text-white">
+						className="flex w-full items-center justify-between px-4 py-3 hover:bg-slate-50">
+						<span className="text-sm font-semibold text-slate-900">
 							Availability
 						</span>
 						{expandedSections.availability ? (
-							<HiChevronUp className="w-4 h-4 text-gray-400" />
+							<HiChevronUp className="h-4 w-4 text-slate-400" />
 						) : (
-							<HiChevronDown className="w-4 h-4 text-gray-400" />
+							<HiChevronDown className="h-4 w-4 text-slate-400" />
 						)}
 					</button>
 
 					{expandedSections.availability && (
-						<div className="px-2 pb-3 space-y-1">
+						<div className="space-y-1 px-2 pb-3">
 							{availabilityOptions.map((option) => (
 								<button
 									key={option.value}
 									onClick={() => updateFilter("availability", option.value)}
-									className={`w-full px-3 py-2.5 rounded-lg text-left transition-all ${
+									className={`w-full cursor-pointer rounded-xl px-3 py-2.5 text-left transition ${
 										filters.availability === option.value
-											? "bg-basepoint-teal/20 border border-basepoint-teal/30"
-											: "hover:bg-white/5"
+											? "border border-emerald-200 bg-emerald-50"
+											: "hover:bg-slate-50"
 									}`}>
 									<div className="flex items-center gap-2.5">
 										<span className="text-lg">{option.icon}</span>
 										<span
 											className={`text-sm font-medium ${
 												filters.availability === option.value
-													? "text-basepoint-teal"
-													: "text-gray-300"
+													? "text-emerald-700"
+													: "text-slate-700"
 											}`}>
 											{option.label}
 										</span>
@@ -358,7 +356,6 @@ export default function FilterSidebar({
 					)}
 				</div>
 
-				{/* Reset button */}
 				{hasActiveFilters && (
 					<button
 						onClick={() =>
@@ -370,17 +367,16 @@ export default function FilterSidebar({
 								availability: "",
 							})
 						}
-						className="w-full px-4 py-3 bg-gradient-to-r from-red-500/20 to-orange-500/20 border border-red-500/30 text-red-300 hover:text-red-200 rounded-xl font-semibold transition-all hover:shadow-lg hover:shadow-red-500/20 flex items-center justify-center gap-2">
-						<HiX className="w-4 h-4" />
+						className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-2xl border border-red-200 bg-gradient-to-r from-red-50 to-orange-50 px-4 py-3 font-semibold text-red-600 transition hover:border-red-300 hover:text-red-700">
+						<HiX className="h-4 w-4" />
 						Reset all filters
 					</button>
 				)}
 
-				{/* Stats footer */}
-				<div className="p-4 bg-white/5 border border-white/10 rounded-xl">
+				<div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
 					<div className="flex items-center justify-between text-xs">
-						<span className="text-gray-400">Active filters:</span>
-						<span className="font-bold text-basepoint-teal">
+						<span className="text-slate-500">Active filters:</span>
+						<span className="font-bold text-emerald-700">
 							{
 								[
 									filters.category,

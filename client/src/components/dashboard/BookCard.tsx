@@ -9,25 +9,25 @@ interface Booking {
 function getStatusColor(status: Booking["status"]): string {
 	switch (status) {
 		case "completed":
-			return "text-emerald-300";
+			return "text-emerald-700 bg-emerald-50 border-emerald-200";
 		case "confirmed":
-			return "text-teal-300";
+			return "text-teal-700 bg-teal-50 border-teal-200";
 		case "cancelled":
-			return "text-red-300";
+			return "text-red-700 bg-red-50 border-red-200";
 		case "no-show":
-			return "text-yellow-300";
+			return "text-amber-700 bg-amber-50 border-amber-200";
 		default:
-			return "text-gray-300";
+			return "text-slate-700 bg-slate-50 border-slate-200";
 	}
 }
 
 export default function BookingCard({ booking }: { booking: Booking }) {
-	const statusColor = getStatusColor(booking.status);
+	const statusClasses = getStatusColor(booking.status);
 
 	return (
-		<div className="rounded-lg border border-white/10 bg-white/5 p-4">
+		<div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm transition hover:shadow-md">
 			<div className="flex items-center gap-3">
-				<div className="flex h-10 w-10 items-center justify-center rounded-lg bg-basepoint-teal/15 text-xs font-semibold text-basepoint-teal">
+				<div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-100 to-teal-100 text-xs font-bold text-emerald-700">
 					{booking.clientName
 						.split(" ")
 						.map((n) => n[0])
@@ -36,17 +36,25 @@ export default function BookingCard({ booking }: { booking: Booking }) {
 						.toUpperCase()}
 				</div>
 
-				<div className="flex-1">
-					<p className="text-sm font-medium text-white">{booking.clientName}</p>
-					<p className="text-xs text-gray-400">
-						{booking.serviceName} •{" "}
-						<span className={statusColor}>{booking.status}</span>
+				<div className="min-w-0 flex-1">
+					<p className="truncate text-sm font-semibold text-slate-900">
+						{booking.clientName}
 					</p>
+					<div className="mt-1 flex flex-wrap items-center gap-2 text-xs text-slate-500">
+						<span className="truncate">{booking.serviceName}</span>
+						<span>•</span>
+						<span
+							className={`inline-flex rounded-full border px-2 py-0.5 font-medium capitalize ${statusClasses}`}>
+							{booking.status}
+						</span>
+					</div>
 				</div>
 
-				<div className="text-right text-sm">
-					<p className="text-white">${booking.price}</p>
-					<p className="text-gray-400">{booking.datetime}</p>
+				<div className="text-right">
+					<p className="text-sm font-semibold text-slate-900">
+						${booking.price}
+					</p>
+					<p className="text-xs text-slate-500">{booking.datetime}</p>
 				</div>
 			</div>
 		</div>

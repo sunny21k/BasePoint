@@ -24,86 +24,130 @@ export default function StepIndicator({
 	);
 
 	return (
-		<div className="w-full max-w-4xl mx-auto px-4">
-			{/* Title row */}
-			<div className="mb-6 flex flex-col gap-0.5">
-				<h2 className="text-lg font-semibold text-white">
-					Create your BasePoint business
-				</h2>
-				<p className="text-sm text-gray-400">
-					We’ll guide you through setting up your booking page in a few simple
-					steps.
-				</p>
-			</div>
-
-			{/* Progress bar */}
-			<div className="mb-8">
-				<div className="flex items-center justify-between text-sm text-gray-400">
-					<span>
-						Step {currentStep} of {totalSteps}
-					</span>
-					<span>{percent}% complete</span>
+		<div className="mx-auto w-full max-w-5xl px-4">
+			<div className="rounded-[1.75rem] border border-slate-200 bg-white/85 p-5 shadow-sm backdrop-blur-sm">
+				<div className="mb-5 flex flex-col gap-1">
+					<h2 className="text-xl font-semibold tracking-tight text-slate-900">
+						Create your BasePoint business
+					</h2>
+					<p className="text-sm leading-6 text-slate-500">
+						We&apos;ll guide you through setting up your booking page in a few
+						simple steps.
+					</p>
 				</div>
-				<div className="mt-2 h-1.5 overflow-hidden rounded-full bg-white/5">
-					<div
-						className="h-full bg-linear-to-r from-basepoint-teal to-emerald-400 transition-all duration-500 ease-out"
-						style={{ width: `${percent}%` }}
-					/>
+
+				<div className="mb-6">
+					<div className="mb-2 flex items-center justify-between text-sm text-slate-500">
+						<span>
+							Step {currentStep} of {totalSteps}
+						</span>
+						<span>{percent}% complete</span>
+					</div>
+
+					<div className="h-2 overflow-hidden rounded-full bg-slate-100">
+						<div
+							className="h-full rounded-full bg-gradient-to-r from-emerald-300 via-teal-300 to-cyan-300 transition-all duration-500 ease-out"
+							style={{ width: `${percent}%` }}
+						/>
+					</div>
 				</div>
-			</div>
 
-			{/* Step dots (desktop only) */}
-			<div className="hidden lg:flex items-center justify-between">
-				{steps.map((step, idx) => {
-					const isCompleted = currentStep > step.number;
-					const isActive = currentStep === step.number;
-					const isFuture = currentStep < step.number;
+				<div className="hidden items-start justify-between gap-2 lg:flex">
+					{steps.map((step, idx) => {
+						const isCompleted = currentStep > step.number;
+						const isActive = currentStep === step.number;
+						const isFuture = currentStep < step.number;
 
-					return (
-						<div key={step.number} className="flex items-center">
-							<div className="flex flex-col items-center">
-								<div
-									className={`relative flex h-9 w-9 items-center justify-center rounded-full font-semibold text-xs transition-all duration-300 ${
-										isActive
-											? "bg-basepoint-teal text-white shadow-lg shadow-basepoint-teal/40"
-											: isCompleted
-												? "bg-white/10 text-basepoint-teal"
-												: "bg-white/5 text-gray-500"
-									}`}>
-									{isCompleted ? (
-										<svg
-											className="h-3.5 w-3.5"
-											fill="currentColor"
-											viewBox="0 0 20 20">
-											<path
-												fillRule="evenodd"
-												d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-												clipRule="evenodd"
-											/>
-										</svg>
-									) : (
-										step.number
-									)}
+						return (
+							<div key={step.number} className="flex flex-1 items-center">
+								<div className="flex flex-col items-center">
+									<div
+										className={`flex h-10 w-10 items-center justify-center rounded-full text-sm font-semibold transition-all duration-300 ${
+											isActive
+												? "border border-emerald-200 bg-gradient-to-r from-emerald-400 to-teal-400 text-white shadow-sm"
+												: isCompleted
+													? "border border-emerald-200 bg-emerald-50 text-emerald-700"
+													: "border border-slate-200 bg-white text-slate-400"
+										}`}>
+										{isCompleted ? (
+											<svg
+												className="h-4 w-4"
+												fill="currentColor"
+												viewBox="0 0 20 20">
+												<path
+													fillRule="evenodd"
+													d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+													clipRule="evenodd"
+												/>
+											</svg>
+										) : (
+											step.number
+										)}
+									</div>
+
+									<span
+										className={`mt-2 text-xs font-medium transition-colors duration-300 ${
+											isFuture ? "text-slate-400" : "text-slate-700"
+										}`}>
+										{step.label}
+									</span>
 								</div>
-								<span
-									className={`mt-2 text-xs font-medium transition-colors duration-300 ${isFuture ? "text-gray-500" : "text-white"}`}>
-									{step.label}
-								</span>
-							</div>
 
-							{/* Connector line */}
-							{idx < steps.length - 1 && (
+								{idx < steps.length - 1 && (
+									<div className="mx-3 h-0.5 flex-1 overflow-hidden rounded-full bg-slate-100">
+										<div
+											className={`h-full rounded-full transition-all duration-300 ${
+												currentStep > step.number
+													? "bg-gradient-to-r from-emerald-300 to-teal-300"
+													: "bg-transparent"
+											}`}
+										/>
+									</div>
+								)}
+							</div>
+						);
+					})}
+				</div>
+
+				<div className="mt-6 grid gap-2 sm:grid-cols-3 lg:hidden">
+					{steps.map((step) => {
+						const isCompleted = currentStep > step.number;
+						const isActive = currentStep === step.number;
+
+						return (
+							<div
+								key={step.number}
+								className={`rounded-2xl border px-3 py-3 text-center transition ${
+									isActive
+										? "border-emerald-200 bg-emerald-50"
+										: isCompleted
+											? "border-emerald-100 bg-emerald-50/60"
+											: "border-slate-200 bg-white"
+								}`}>
 								<div
-									className={`w-12 h-0.5 mx-2 rounded-full transition-all duration-300 ${
-										currentStep >= step.number
-											? "bg-basepoint-teal"
-											: "bg-white/5"
-									}`}
-								/>
-							)}
-						</div>
-					);
-				})}
+									className={`mx-auto flex h-8 w-8 items-center justify-center rounded-full text-xs font-semibold ${
+										isActive
+											? "bg-gradient-to-r from-emerald-400 to-teal-400 text-white"
+											: isCompleted
+												? "bg-emerald-100 text-emerald-700"
+												: "bg-slate-100 text-slate-500"
+									}`}>
+									{isCompleted ? "✓" : step.number}
+								</div>
+								<p
+									className={`mt-2 text-xs font-medium ${
+										isActive
+											? "text-slate-900"
+											: isCompleted
+												? "text-emerald-700"
+												: "text-slate-400"
+									}`}>
+									{step.label}
+								</p>
+							</div>
+						);
+					})}
+				</div>
 			</div>
 		</div>
 	);

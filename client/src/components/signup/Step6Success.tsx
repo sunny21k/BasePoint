@@ -18,75 +18,82 @@ export default function Step6Success({ businessName }: Step6SuccessProps) {
 	};
 
 	return (
-		<div className="max-w-2xl mx-auto text-center">
-			{/* Success icon */}
-			<div className="mb-6">
-				<div className="w-20 h-20 bg-basepoint-teal/20 rounded-full flex items-center justify-center mx-auto">
-					<HiCheckCircle className="w-12 h-12 text-basepoint-teal" />
-				</div>
-			</div>
-
-			<h2 className="text-4xl font-bold text-white mb-3">You're all set!</h2>
-			<p className="text-lg text-gray-400 mb-8">
-				Your booking page is live and ready to accept appointments
-			</p>
-
-			{/* Booking link */}
-			<div className="bg-white/5 border border-white/10 rounded-xl p-6 mb-6">
-				<p className="text-sm text-gray-400 mb-3">Your booking link:</p>
-				<div className="flex items-center gap-3">
-					<div className="flex-1 px-4 py-3 bg-white/5 border border-white/10 rounded-lg text-basepoint-teal font-mono text-sm">
-						{bookingLink}
+		<div className="mx-auto w-full max-w-3xl px-4">
+			<div className="rounded-[1.75rem] border border-slate-200 bg-white/90 p-6 text-center shadow-[0_20px_60px_rgba(15,23,42,0.08)] backdrop-blur-sm lg:p-8">
+				<div className="mb-6 flex justify-center">
+					<div className="flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-emerald-100 to-teal-100 shadow-sm">
+						<HiCheckCircle className="h-12 w-12 text-emerald-600" />
 					</div>
-					<button
-						onClick={copyLink}
-						className="px-4 py-3 bg-basepoint-teal text-white rounded-lg cursor-pointer hover:bg-teal-500 transition flex items-center gap-2">
-						{copied ? (
-							<>
-								<HiCheckCircle className="w-5 h-5" />
-								Copied!
-							</>
-						) : (
-							<>
-								<HiClipboardCopy className="w-5 h-5" />
-								Copy
-							</>
-						)}
-					</button>
 				</div>
+
+				<h2 className="mb-3 text-4xl font-bold tracking-tight text-slate-900">
+					You&apos;re all set!
+				</h2>
+				<p className="mb-8 text-lg text-slate-500">
+					Your booking page is live and ready to accept appointments.
+				</p>
+
+				<div className="mb-6 rounded-2xl border border-slate-200 bg-gradient-to-br from-slate-50 to-white p-6 text-left shadow-sm">
+					<p className="mb-3 text-sm font-medium text-slate-500">
+						Your booking link:
+					</p>
+
+					<div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+						<div className="flex-1 rounded-2xl border border-slate-200 bg-white px-4 py-3 font-mono text-sm text-slate-900 shadow-sm">
+							{bookingLink}
+						</div>
+
+						<button
+							onClick={copyLink}
+							className="inline-flex cursor-pointer items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-600 px-4 py-3 text-sm font-semibold text-white shadow-sm transition hover:from-emerald-500 hover:to-teal-500">
+							{copied ? (
+								<>
+									<HiCheckCircle className="h-5 w-5" />
+									Copied!
+								</>
+							) : (
+								<>
+									<HiClipboardCopy className="h-5 w-5" />
+									Copy
+								</>
+							)}
+						</button>
+					</div>
+				</div>
+
+				<div className="mb-8 rounded-2xl border border-slate-200 bg-white p-6 text-left shadow-sm">
+					<h3 className="mb-4 text-base font-semibold text-slate-900">
+						Quick next steps:
+					</h3>
+					<ul className="space-y-3 text-sm text-slate-600">
+						<li className="flex items-start gap-3">
+							<span className="mt-0.5 text-emerald-600">✓</span>
+							<span>
+								Share your link in your Instagram bio, website, and business
+								cards.
+							</span>
+						</li>
+						<li className="flex items-start gap-3">
+							<span className="mt-0.5 text-emerald-600">✓</span>
+							<span>Connect Stripe to accept online payments.</span>
+						</li>
+						<li className="flex items-start gap-3">
+							<span className="mt-0.5 text-emerald-600">✓</span>
+							<span>Customize your booking page with colors and photos.</span>
+						</li>
+					</ul>
+				</div>
+
+				<Link
+					to="/business/dashboard"
+					className="inline-flex w-full items-center justify-center rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-600 px-8 py-4 font-semibold text-white shadow-sm transition hover:from-emerald-500 hover:to-teal-500 sm:w-auto">
+					Go to Dashboard →
+				</Link>
+
+				<p className="mt-4 text-sm text-slate-500">
+					You can always change these settings later.
+				</p>
 			</div>
-
-			{/* Next steps */}
-			<div className="text-left bg-white/5 border border-white/10 rounded-xl p-6 mb-8">
-				<h3 className="font-semibold text-white mb-4">Quick next steps:</h3>
-				<ul className="space-y-3 text-sm text-gray-300">
-					<li className="flex items-start gap-3">
-						<span className="text-basepoint-teal mt-1">✓</span>
-						<span>
-							Share your link in your Instagram bio, website, and business cards
-						</span>
-					</li>
-					<li className="flex items-start gap-3">
-						<span className="text-basepoint-teal mt-1">✓</span>
-						<span>Connect Stripe to accept online payments</span>
-					</li>
-					<li className="flex items-start gap-3">
-						<span className="text-basepoint-teal mt-1">✓</span>
-						<span>Customize your booking page with colors and photos</span>
-					</li>
-				</ul>
-			</div>
-
-			{/* CTA */}
-			<Link
-				to="/dashboard"
-				className="inline-block w-full sm:w-auto px-8 py-4 bg-basepoint-teal text-white rounded-lg font-semibold hover:bg-teal-500 transition">
-				Go to Dashboard →
-			</Link>
-
-			<p className="mt-4 text-sm text-gray-500">
-				You can always change these settings later
-			</p>
 		</div>
 	);
 }

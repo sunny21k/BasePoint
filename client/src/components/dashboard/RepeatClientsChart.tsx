@@ -26,11 +26,8 @@ function getRepeatNewStats(bookings: Booking[]) {
 	let newCount = 0;
 
 	for (const count of clientMap.values()) {
-		if (count > 1) {
-			repeat += 1;
-		} else {
-			newCount += 1;
-		}
+		if (count > 1) repeat += 1;
+		else newCount += 1;
 	}
 
 	return { repeat, new: newCount };
@@ -50,36 +47,41 @@ export default function RepeatClientsChart({
 
 	if (total === 0) {
 		return (
-			<div className="rounded-xl border border-white/10 bg-white/5 p-5 text-center text-sm text-gray-400">
+			<div className="rounded-2xl border border-slate-200 bg-white p-5 text-center text-sm text-slate-500 shadow-sm">
 				No completed bookings yet
 			</div>
 		);
 	}
 
 	return (
-		<div className="rounded-xl border border-white/10 bg-white/5 p-5">
-			<h3 className="mb-4 text-lg font-semibold text-white">
+		<div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+			<h3 className="mb-4 text-lg font-semibold text-slate-900">
 				Repeat vs new clients
 			</h3>
 
-			<div className="flex h-32 items-center justify-center space-x-4">
-				{/* Pie slice 1: Repeat */}
-				<div
-					className="h-20 w-20 rounded-full bg-basepoint-teal"
-					style={{ width: 0, height: 0 }}></div>
+			<div className="space-y-3">
+				<div className="flex items-center justify-between rounded-2xl bg-emerald-50 px-4 py-3">
+					<div className="flex items-center gap-2">
+						<div className="h-3 w-3 rounded-full bg-emerald-600" />
+						<span className="text-sm font-medium text-slate-700">
+							{repeat} repeat clients
+						</span>
+					</div>
+					<span className="text-sm font-semibold text-emerald-700">
+						{repeatPercent.toFixed(0)}%
+					</span>
+				</div>
 
-				{/* Simple “text pie” for now, easier to style */}
-				<div className="flex flex-col gap-1 text-sm">
+				<div className="flex items-center justify-between rounded-2xl bg-teal-50 px-4 py-3">
 					<div className="flex items-center gap-2">
-						<div className="h-3 w-3 rounded-full bg-basepoint-teal" />
-						<span className="text-white">{repeat} repeat clients</span>
-						<span className="text-gray-400">({repeatPercent.toFixed(0)}%)</span>
+						<div className="h-3 w-3 rounded-full bg-teal-500" />
+						<span className="text-sm font-medium text-slate-700">
+							{newCount} new clients
+						</span>
 					</div>
-					<div className="flex items-center gap-2">
-						<div className="h-3 w-3 rounded-full bg-emerald-400" />
-						<span className="text-white">{newCount} new clients</span>
-						<span className="text-gray-400">({newPercent.toFixed(0)}%)</span>
-					</div>
+					<span className="text-sm font-semibold text-teal-700">
+						{newPercent.toFixed(0)}%
+					</span>
 				</div>
 			</div>
 		</div>

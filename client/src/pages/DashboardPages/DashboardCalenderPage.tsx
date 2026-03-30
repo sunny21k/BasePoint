@@ -1,7 +1,6 @@
 import DashboardLayout from "../../components/dashboard/DashboardLayout";
 import { useState } from "react";
 
-// Mock data model (you’ll replace with real API later)
 type BusinessHour = {
 	day:
 		| "monday"
@@ -11,8 +10,8 @@ type BusinessHour = {
 		| "friday"
 		| "saturday"
 		| "sunday";
-	open: string; // "09:00"
-	close: string; // "17:00"
+	open: string;
+	close: string;
 	isOpen: boolean;
 };
 
@@ -22,10 +21,9 @@ type Booking = {
 	serviceName: string;
 	price: number;
 	status: "confirmed" | "completed" | "cancelled" | "no-show";
-	datetime: string; // ISO-ish or human time
+	datetime: string;
 };
 
-// Dummy hours and bookings for one day
 const mockHours: BusinessHour[] = [
 	{ day: "monday", open: "09:00", close: "17:00", isOpen: true },
 	{ day: "tuesday", open: "09:00", close: "17:00", isOpen: true },
@@ -56,52 +54,68 @@ const mockBookings: Booking[] = [
 ];
 
 export default function DashboardCalendarPage() {
-	const [selectedDate, setSelectedDate] = useState(new Date());
+	const [selectedDate] = useState(new Date());
 
-	// Just show bookings for the selected day (in reality you filter by date)
 	const filtered = mockBookings;
 
 	return (
 		<DashboardLayout>
-			<div>
-				<h1 className="text-2xl font-semibold text-white">Calendar</h1>
-				<p className="mt-1 text-sm text-gray-400">
-					View your appointments and availability by day.
-				</p>
+			<div className="rounded-[1.75rem] border border-slate-200 bg-white/90 p-6 shadow-[0_20px_60px_rgba(15,23,42,0.08)] backdrop-blur-sm">
+				<div className="inline-flex rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700">
+					Calendar
+				</div>
+
+				<div className="mt-3">
+					<h1 className="text-3xl font-semibold tracking-tight text-slate-900">
+						Calendar
+					</h1>
+					<p className="mt-2 text-sm text-slate-500">
+						View your appointments and availability by day.
+					</p>
+				</div>
 			</div>
 
-			{/* Selected date display */}
-			<div className="mt-6">
-				<h2 className="text-sm font-medium text-white">
+			<div className="mt-6 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+				<p className="text-xs font-medium uppercase tracking-wide text-slate-500">
+					Selected date
+				</p>
+				<h2 className="mt-1 text-sm font-semibold text-slate-900">
 					{selectedDate.toDateString()}
 				</h2>
 			</div>
 
-			{/* Time slots list (simplified) */}
-			<div className="mt-6 rounded-xl border border-white/10 bg-white/5 p-5">
-				<h3 className="mb-4 text-sm font-semibold text-white">
-					Booked appointments
-				</h3>
+			<div className="mt-6 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
+				<div className="mb-4 flex items-center justify-between">
+					<h3 className="text-sm font-semibold text-slate-900">
+						Booked appointments
+					</h3>
+					<span className="rounded-full bg-emerald-50 px-3 py-1 text-xs font-medium text-emerald-700">
+						{filtered.length} bookings
+					</span>
+				</div>
 
 				{filtered.length > 0 ? (
 					<div className="space-y-3">
 						{filtered.map((booking) => (
 							<div
 								key={booking.id}
-								className="flex items-center justify-between rounded-lg border border-white/10 bg-white/5 px-4 py-3 text-sm">
+								className="flex items-center justify-between rounded-2xl border border-slate-200 bg-gradient-to-br from-slate-50 to-white px-4 py-3 text-sm shadow-sm">
 								<div>
-									<p className="text-white font-medium">{booking.clientName}</p>
-									<p className="text-gray-400 text-xs">
+									<p className="font-semibold text-slate-900">
+										{booking.clientName}
+									</p>
+									<p className="text-xs text-slate-500">
 										{booking.serviceName} • {booking.datetime}
 									</p>
 								</div>
+
 								<span
-									className={`rounded-full px-2 py-1 text-xs font-medium capitalize ${
+									className={`rounded-full px-2.5 py-1 text-xs font-medium capitalize ${
 										booking.status === "confirmed"
-											? "bg-basepoint-teal/20 text-basepoint-teal"
+											? "bg-emerald-50 text-emerald-700"
 											: booking.status === "completed"
-												? "bg-emerald-400/20 text-emerald-300"
-												: "bg-red-400/20 text-red-300"
+												? "bg-teal-50 text-teal-700"
+												: "bg-red-50 text-red-700"
 									}`}>
 									{booking.status}
 								</span>
@@ -109,13 +123,12 @@ export default function DashboardCalendarPage() {
 						))}
 					</div>
 				) : (
-					<p className="text-sm text-gray-400">No appointments today</p>
+					<p className="text-sm text-slate-500">No appointments today</p>
 				)}
 			</div>
 
-			{/* Availability / slots could be added later */}
-			<div className="mt-6 rounded-xl border border-white/10 bg-white/5 p-5 text-sm text-gray-400">
-				Availability and time‑slot picker coming soon.
+			<div className="mt-6 rounded-2xl border border-dashed border-slate-300 bg-gradient-to-br from-slate-50 to-white p-5 text-sm text-slate-500 shadow-sm">
+				Availability and time-slot picker coming soon.
 			</div>
 		</DashboardLayout>
 	);
