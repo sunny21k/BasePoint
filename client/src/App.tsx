@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Layout from "./pages/Layout";
 import Home from "./pages/Home";
 import BusinessSignup from "./pages/BusinessSignup";
@@ -14,6 +14,9 @@ import BusinessLogin from "./pages/BusinessLogin";
 import CustomerLogin from "./pages/CustomerLogin";
 import About from "./pages/About";
 import PricePage from "./pages/PricePage";
+import PendingReview from "./pages/PendingReview";
+import BusinessOnboarding from "./pages/BusinessOnboarding";
+import Support from "./pages/Support";
 
 function App() {
 	return (
@@ -26,7 +29,8 @@ function App() {
 					<Route path="/pricing" element={<PricePage />} />
 				</Route>
 
-				<Route path="/business/signup" element={<BusinessSignup />} />
+				<Route path="/business/signup" element={<BusinessOnboarding />} />
+				<Route path="/business/pending" element={<PendingReview />} />
 				<Route path="/business/login" element={<BusinessLogin />} />
 				<Route path="/customer/login" element={<CustomerLogin />} />
 
@@ -48,6 +52,16 @@ function App() {
 				<Route
 					path="/business/dashboard/settings"
 					element={<DashboardSettings />}
+				/>
+
+				<Route
+					path="/businessonboarding"
+					element={<Navigate to="/business/signup" replace />}
+				/>
+				<Route path="/support" element={<Support />} />
+				<Route
+					path="/pendingreview"
+					element={<Navigate to="/business/pending" replace />}
 				/>
 			</Routes>
 		</BrowserRouter>

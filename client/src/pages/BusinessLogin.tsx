@@ -7,6 +7,7 @@ import {
 	HiLockClosed,
 	HiArrowRight,
 } from "react-icons/hi";
+import type { GiLetterBomb } from "react-icons/gi";
 
 export default function BusinessLogin() {
 	const navigate = useNavigate();
@@ -44,7 +45,15 @@ export default function BusinessLogin() {
 
 		setTimeout(() => {
 			setIsLoading(false);
-			navigate("/dashboard");
+			let accountStatus = "pending";
+
+			if (accountStatus === "approved") {
+				navigate("/dashboard");
+			} else if (accountStatus === "pending") {
+				navigate("/business/pending");
+			} else {
+				navigate("/business/signup");
+			}
 		}, 1500);
 	};
 
@@ -115,7 +124,7 @@ export default function BusinessLogin() {
 									<button
 										type="button"
 										onClick={() => setShowPassword(!showPassword)}
-										className="absolute cursor-pointer right-4 top-1/2 -translate-y-1/2 text-slate-400 transition hover:text-slate-700">
+										className="absolute right-4 top-1/2 cursor-pointer -translate-y-1/2 text-slate-400 transition hover:text-slate-700">
 										{showPassword ? (
 											<HiEyeOff className="h-5 w-5" />
 										) : (
@@ -151,7 +160,7 @@ export default function BusinessLogin() {
 							<button
 								type="submit"
 								disabled={isLoading}
-								className="group relative cursor-pointer flex w-full items-center justify-center overflow-hidden rounded-2xl bg-slate-900 py-3 font-semibold text-white shadow-sm transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-50">
+								className="group relative flex w-full cursor-pointer items-center justify-center overflow-hidden rounded-2xl bg-slate-900 py-3 font-semibold text-white shadow-sm transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-50">
 								<span className="relative z-10 flex items-center justify-center gap-2">
 									{isLoading ? (
 										<>
