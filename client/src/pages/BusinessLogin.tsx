@@ -7,10 +7,11 @@ import {
 	HiLockClosed,
 	HiArrowRight,
 } from "react-icons/hi";
-import type { GiLetterBomb } from "react-icons/gi";
+import { useBusinessAuth } from "./BusinessAuthContext";
 
 export default function BusinessLogin() {
 	const navigate = useNavigate();
+	const { refreshAuth } = useBusinessAuth();
 	const [showPassword, setShowPassword] = useState(false);
 	const [formData, setFormData] = useState({
 		email: "",
@@ -43,17 +44,10 @@ export default function BusinessLogin() {
 
 		setIsLoading(true);
 
-		setTimeout(() => {
+		setTimeout(async () => {
+			await refreshAuth();
 			setIsLoading(false);
-			let accountStatus = "pending";
-
-			if (accountStatus === "approved") {
-				navigate("/dashboard");
-			} else if (accountStatus === "pending") {
-				navigate("/business/pending");
-			} else {
-				navigate("/business/signup");
-			}
+			navigate("/business/dashboard");
 		}, 1500);
 	};
 
