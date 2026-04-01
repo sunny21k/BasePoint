@@ -17,54 +17,75 @@ import PricePage from "./pages/PricePage";
 import PendingReview from "./pages/PendingReview";
 import BusinessOnboarding from "./pages/BusinessOnboarding";
 import Support from "./pages/Support";
+import BusinessProfilePage from "./pages/DashboardPages/BusinessProfilePage";
+import BusinessProtectedRoute from "./pages/BusinessProtectedRoute";
+import { BusinessAuthProvider } from "./pages/BusinessAuthContext";
 
 function App() {
 	return (
-		<BrowserRouter>
-			<Routes>
-				<Route element={<Layout />}>
-					<Route path="/" element={<Home />} />
-					<Route path="/search" element={<Search />} />
-					<Route path="/about" element={<About />} />
-					<Route path="/pricing" element={<PricePage />} />
-				</Route>
+		<BusinessAuthProvider>
+			<BrowserRouter>
+				<Routes>
+					<Route element={<Layout />}>
+						<Route path="/" element={<Home />} />
+						<Route path="/search" element={<Search />} />
+						<Route path="/about" element={<About />} />
+						<Route path="/pricing" element={<PricePage />} />
+					</Route>
 
-				<Route path="/business/signup" element={<BusinessOnboarding />} />
-				<Route path="/business/pending" element={<PendingReview />} />
-				<Route path="/business/login" element={<BusinessLogin />} />
-				<Route path="/customer/login" element={<CustomerLogin />} />
+					<Route path="/business/signup" element={<BusinessOnboarding />} />
+					<Route path="/business/pending" element={<PendingReview />} />
+					<Route path="/business/login" element={<BusinessLogin />} />
+					<Route path="/customer/login" element={<CustomerLogin />} />
+					<Route path="/support" element={<Support />} />
 
-				<Route path="/business/dashboard" element={<DashboardOverviewPage />} />
-				<Route
-					path="/business/dashboard/calendar"
-					element={<DashboardCalenderPage />}
-				/>
-				<Route path="/business/dashboard/clients" element={<ClientsPage />} />
-				<Route path="/business/dashboard/services" element={<Services />} />
-				<Route
-					path="/business/dashboard/subscriptions"
-					element={<Subscriptions />}
-				/>
-				<Route
-					path="/business/dashboard/payments"
-					element={<DashboardPayment />}
-				/>
-				<Route
-					path="/business/dashboard/settings"
-					element={<DashboardSettings />}
-				/>
+					<Route element={<BusinessProtectedRoute />}>
+						<Route
+							path="/business/dashboard"
+							element={<DashboardOverviewPage />}
+						/>
+						<Route
+							path="/business/dashboard/profile"
+							element={<BusinessProfilePage />}
+						/>
+						<Route
+							path="/business/dashboard/calendar"
+							element={<DashboardCalenderPage />}
+						/>
+						<Route
+							path="/business/dashboard/clients"
+							element={<ClientsPage />}
+						/>
+						<Route path="/business/dashboard/services" element={<Services />} />
+						<Route
+							path="/business/dashboard/subscriptions"
+							element={<Subscriptions />}
+						/>
+						<Route
+							path="/business/dashboard/payments"
+							element={<DashboardPayment />}
+						/>
+						<Route
+							path="/business/dashboard/settings"
+							element={<DashboardSettings />}
+						/>
+					</Route>
 
-				<Route
-					path="/businessonboarding"
-					element={<Navigate to="/business/signup" replace />}
-				/>
-				<Route path="/support" element={<Support />} />
-				<Route
-					path="/pendingreview"
-					element={<Navigate to="/business/pending" replace />}
-				/>
-			</Routes>
-		</BrowserRouter>
+					<Route
+						path="/businessonboarding"
+						element={<Navigate to="/business/signup" replace />}
+					/>
+					<Route
+						path="/pendingreview"
+						element={<Navigate to="/business/pending" replace />}
+					/>
+					<Route
+						path="/business/signuponboarding"
+						element={<Navigate to="/business/signup" replace />}
+					/>
+				</Routes>
+			</BrowserRouter>
+		</BusinessAuthProvider>
 	);
 }
 

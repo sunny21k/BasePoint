@@ -19,7 +19,7 @@ export default function MapView({ businesses }: MapViewProps) {
 					Showing {businesses.length} businesses on map
 				</p>
 				<p className="mt-4 text-xs text-slate-400">
-					We&apos;ll integrate Google Maps or Mapbox here later.
+					MAP VIEW INTEGRATION LATER!
 				</p>
 			</div>
 		</div>

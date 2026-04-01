@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { FiArrowRight, FiBriefcase } from "react-icons/fi";
 import QuickStatsCard from "../components/dashboard/QuickStatsCard";
 import UpcomingBookingsCard from "../components/dashboard/UpcomingBookingsCard";
 import RevenueChart from "../components/dashboard/RevenueChart";
@@ -68,13 +70,23 @@ export default function DashboardPage() {
 					Dashboard overview
 				</div>
 
-				<div className="mt-4">
-					<h1 className="text-3xl font-semibold tracking-tight text-slate-900">
-						Overview
-					</h1>
-					<p className="mt-2 text-sm text-slate-500">
-						High-level stats and recent activity.
-					</p>
+				<div className="mt-4 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+					<div>
+						<h1 className="text-3xl font-semibold tracking-tight text-slate-900">
+							Overview
+						</h1>
+						<p className="mt-2 text-sm text-slate-500">
+							High-level stats and recent activity.
+						</p>
+					</div>
+
+					<Link
+						to="/business/dashboard/profile"
+						className="inline-flex items-center gap-2 rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-50">
+						<FiBriefcase className="h-4 w-4 text-sky-600" />
+						Business profile
+						<FiArrowRight className="h-4 w-4" />
+					</Link>
 				</div>
 			</div>
 
