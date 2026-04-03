@@ -3,11 +3,12 @@ import express from "express";
 import connectDB from "./config/db";
 import cors from "cors";
 import authRoutes from "./routes/authRoutes"
+import businessRoutes from "./routes/businessRoutes"
 
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 3000;
 
 connectDB();
 
@@ -16,8 +17,9 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use("/api/auth", authRoutes);
+app.use("/api/business", businessRoutes)
 
-app.get("/", (req: express.Request, res: express.Response) => {
+app.get("/", (_req, res) => {
   res.send("API is running");
 });
 
