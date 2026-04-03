@@ -47,7 +47,7 @@ export const registerUser = async (req: Request, res: Response) => {
                 id: user._id,
                 email: user.email,
                 role: user.role,
-                businessName: user.BusinessName, 
+                businessName: user.businessName, 
                 accountStatus: user.accountStatus,
             },
             token: generateToken(user._id.toString()),

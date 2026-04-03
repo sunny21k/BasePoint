@@ -8,6 +8,7 @@ import {
 	HiArrowRight,
 } from "react-icons/hi";
 import { useBusinessAuth } from "./BusinessAuthContext";
+import axios from "axios";
 
 export default function BusinessLogin() {
 	const navigate = useNavigate();
@@ -44,11 +45,41 @@ export default function BusinessLogin() {
 
 		setIsLoading(true);
 
-		setTimeout(async () => {
+		try {
+			const response = await axios.post(
+				"http://localhost:3000/api/auth/login",
+				{
+					email: formData.email,
+					password: formData.password,
+				},
+			);
+
+			console.log("Login success:", response.data);
+
+			const { token, user } = response.data;
+
+			// Save token
+			localStorage.setItem("token", token);
+			console.log("Token saved:", token);
+
+			// Refresh auth state
 			await refreshAuth();
+
+			// Small delay to ensure state updates
+			setTimeout(() => {
+				console.log("Navigating to dashboard...");
+				navigate("/business/dashboard", { replace: true });
+			}, 100);
+		} catch (error: any) {
+			console.error("Login error:", error);
+			setErrors({
+				submit:
+					error.response?.data?.message ||
+					"Login failed. Check your email and password.",
+			});
+		} finally {
 			setIsLoading(false);
-			navigate("/business/dashboard");
-		}, 1500);
+		}
 	};
 
 	return (
@@ -150,6 +181,10 @@ export default function BusinessLogin() {
 									Forgot password?
 								</Link>
 							</div>
+
+							{errors.submit && (
+								<p className="text-sm text-red-500">{errors.submit}</p>
+							)}
 
 							<button
 								type="submit"

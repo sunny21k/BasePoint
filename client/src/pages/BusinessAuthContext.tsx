@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react";
+import axios from "axios";
 
 type AccountStatus = "approved" | "pending" | "rejected" | "unknown";
 
@@ -6,12 +7,14 @@ type BusinessAuthContextType = {
 	isAuthenticated: boolean;
 	accountStatus: AccountStatus;
 	isLoading: boolean;
-	refreshAuth: () => void;
+	refreshAuth: () => Promise<void>;
 };
 
 const BusinessAuthContext = createContext<BusinessAuthContextType | undefined>(
 	undefined,
 );
+
+const API_URL = "http://localhost:3000";
 
 export function BusinessAuthProvider({
 	children,
@@ -25,22 +28,33 @@ export function BusinessAuthProvider({
 	const fetchAuth = async () => {
 		setIsLoading(true);
 		try {
-			const response = await fetch("/api/business/me", {
-				credentials: "include",
-			});
+			const token = localStorage.getItem("token");
 
-			if (!response.ok) {
+			if (!token) {
 				setIsAuthenticated(false);
 				setAccountStatus("unknown");
+				setIsLoading(false);
 				return;
 			}
 
-			const data = await response.json();
-			setIsAuthenticated(Boolean(data.isAuthenticated));
-			setAccountStatus(data.accountStatus ?? "unknown");
-		} catch {
+			const response = await axios.get(`${API_URL}/api/business/me`, {
+				headers: {
+					Authorization: `Bearer ${token}`,
+				},
+			});
+
+			if (response.data.user) {
+				setIsAuthenticated(true);
+				setAccountStatus(response.data.user.accountStatus || "unknown");
+			} else {
+				setIsAuthenticated(false);
+				setAccountStatus("unknown");
+			}
+		} catch (error) {
+			console.error("Auth check failed:", error);
 			setIsAuthenticated(false);
 			setAccountStatus("unknown");
+			localStorage.removeItem("token"); // Clear invalid token
 		} finally {
 			setIsLoading(false);
 		}
