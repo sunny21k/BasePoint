@@ -24,6 +24,7 @@ import { BusinessAuthProvider } from "./pages/BusinessPages/BusinessAuthContext"
 import CustomerHome from "./pages/CustomerPages/CustomerHome";
 import CustomerSignup from "./pages/CustomerPages/CustomerSignUp";
 import AccountMismatch from "./pages/AccountMismatch";
+import BusinessCreateAccount from "./pages/BusinessPages/BusinessCreateAccount";
 
 function App() {
 	return (
@@ -44,6 +45,10 @@ function App() {
 					<Route path="/customer/login" element={<CustomerLogin />} />
 					<Route path="/customer/home" element={<CustomerHome />} />
 					<Route path="/account-mismatch" element={<AccountMismatch />} />
+					<Route
+						path="/business/create-account"
+						element={<BusinessCreateAccount />}
+					/>
 					<Route path="/support" element={<Support />} />
 
 					<Route element={<BusinessProtectedRoute />}>

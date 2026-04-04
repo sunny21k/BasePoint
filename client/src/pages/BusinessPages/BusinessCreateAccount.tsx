@@ -1,29 +1,38 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
+	HiArrowRight,
 	HiEye,
 	HiEyeOff,
 	HiMail,
 	HiLockClosed,
-	HiArrowRight,
+	HiUser,
+	HiPhone,
 } from "react-icons/hi";
-import { useBusinessAuth } from "./BusinessAuthContext";
+import { HiBuildingOffice2 } from "react-icons/hi2";
 import axios from "axios";
+import { useBusinessAuth } from "./BusinessAuthContext";
 
-export default function BusinessLogin() {
+export default function BusinessCreateAccount() {
 	const navigate = useNavigate();
 	const { refreshAuth } = useBusinessAuth();
 	const [showPassword, setShowPassword] = useState(false);
 	const [formData, setFormData] = useState({
+		businessName: "",
+		ownerName: "",
 		email: "",
 		password: "",
-		rememberMe: false,
+		phone: "",
 	});
 	const [errors, setErrors] = useState<Record<string, string>>({});
 	const [isLoading, setIsLoading] = useState(false);
 
 	const validate = () => {
 		const newErrors: Record<string, string> = {};
+
+		if (!formData.businessName)
+			newErrors.businessName = "Business name is required";
+		if (!formData.ownerName) newErrors.ownerName = "Owner name is required";
 
 		if (!formData.email) {
 			newErrors.email = "Email is required";
@@ -33,7 +42,11 @@ export default function BusinessLogin() {
 
 		if (!formData.password) {
 			newErrors.password = "Password is required";
+		} else if (formData.password.length < 6) {
+			newErrors.password = "Password must be at least 6 characters";
 		}
+
+		if (!formData.phone) newErrors.phone = "Phone number is required";
 
 		setErrors(newErrors);
 		return Object.keys(newErrors).length === 0;
@@ -47,35 +60,31 @@ export default function BusinessLogin() {
 
 		try {
 			const response = await axios.post(
-				"http://localhost:3000/api/auth/login",
+				"http://localhost:3000/api/auth/business-signup",
 				{
+					businessName: formData.businessName,
+					ownerName: formData.ownerName,
 					email: formData.email,
 					password: formData.password,
+					phone: formData.phone,
 				},
 			);
 
-			console.log("Login success:", response.data);
+			console.log("Signup success:", response.data);
 
-			const { token, user } = response.data;
-
-			// Save token
+			const { token } = response.data;
 			localStorage.setItem("token", token);
-			console.log("Token saved:", token);
 
-			// Refresh auth state
 			await refreshAuth();
 
-			// Small delay to ensure state updates
 			setTimeout(() => {
-				console.log("Navigating to dashboard...");
 				navigate("/business/dashboard", { replace: true });
 			}, 100);
 		} catch (error: any) {
-			console.error("Login error:", error);
+			console.error("Signup error:", error);
 			setErrors({
 				submit:
-					error.response?.data?.message ||
-					"Login failed. Check your email and password.",
+					error.response?.data?.message || "Signup failed. Please try again.",
 			});
 		} finally {
 			setIsLoading(false);
@@ -98,14 +107,66 @@ export default function BusinessLogin() {
 
 						<div className="mb-8">
 							<h1 className="mb-2 text-3xl font-bold tracking-tight text-slate-900">
-								Welcome back
+								Create your account
 							</h1>
 							<p className="text-slate-600">
-								Log in to manage your business and bookings.
+								Set up your business profile and get started.
 							</p>
 						</div>
 
 						<form onSubmit={handleSubmit} className="space-y-5">
+							<div>
+								<label className="mb-2 block text-sm font-medium text-slate-700">
+									Business name
+								</label>
+								<div className="relative">
+									<HiBuildingOffice2 className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400" />
+									<input
+										type="text"
+										value={formData.businessName}
+										onChange={(e) =>
+											setFormData({ ...formData, businessName: e.target.value })
+										}
+										placeholder="BasePoint Barbershop"
+										className={`w-full rounded-2xl border bg-white py-3 pl-12 pr-4 text-slate-900 shadow-sm outline-none transition focus:border-sky-500 ${
+											errors.businessName
+												? "border-red-500"
+												: "border-slate-200"
+										}`}
+									/>
+								</div>
+								{errors.businessName && (
+									<p className="mt-1 text-sm text-red-500">
+										{errors.businessName}
+									</p>
+								)}
+							</div>
+
+							<div>
+								<label className="mb-2 block text-sm font-medium text-slate-700">
+									Owner name
+								</label>
+								<div className="relative">
+									<HiUser className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400" />
+									<input
+										type="text"
+										value={formData.ownerName}
+										onChange={(e) =>
+											setFormData({ ...formData, ownerName: e.target.value })
+										}
+										placeholder="John Doe"
+										className={`w-full rounded-2xl border bg-white py-3 pl-12 pr-4 text-slate-900 shadow-sm outline-none transition focus:border-sky-500 ${
+											errors.ownerName ? "border-red-500" : "border-slate-200"
+										}`}
+									/>
+								</div>
+								{errors.ownerName && (
+									<p className="mt-1 text-sm text-red-500">
+										{errors.ownerName}
+									</p>
+								)}
+							</div>
+
 							<div>
 								<label className="mb-2 block text-sm font-medium text-slate-700">
 									Email address
@@ -141,7 +202,7 @@ export default function BusinessLogin() {
 										onChange={(e) =>
 											setFormData({ ...formData, password: e.target.value })
 										}
-										placeholder="Enter your password"
+										placeholder="Create a password"
 										className={`w-full rounded-2xl border bg-white py-3 pl-12 pr-12 text-slate-900 shadow-sm outline-none transition focus:border-sky-500 ${
 											errors.password ? "border-red-500" : "border-slate-200"
 										}`}
@@ -162,24 +223,27 @@ export default function BusinessLogin() {
 								)}
 							</div>
 
-							<div className="flex items-center justify-between">
-								<label className="flex cursor-pointer items-center gap-2">
-									<input
-										type="checkbox"
-										checked={formData.rememberMe}
-										onChange={(e) =>
-											setFormData({ ...formData, rememberMe: e.target.checked })
-										}
-										className="h-4 w-4 rounded border-slate-300 text-sky-600 focus:ring-sky-500"
-									/>
-									<span className="text-sm text-slate-600">Remember me</span>
+							<div>
+								<label className="mb-2 block text-sm font-medium text-slate-700">
+									Phone number
 								</label>
-
-								<Link
-									to="/forgot-password"
-									className="text-sm font-medium text-sky-700 hover:text-sky-800">
-									Forgot password?
-								</Link>
+								<div className="relative">
+									<HiPhone className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400" />
+									<input
+										type="tel"
+										value={formData.phone}
+										onChange={(e) =>
+											setFormData({ ...formData, phone: e.target.value })
+										}
+										placeholder="(555) 555-5555"
+										className={`w-full rounded-2xl border bg-white py-3 pl-12 pr-4 text-slate-900 shadow-sm outline-none transition focus:border-sky-500 ${
+											errors.phone ? "border-red-500" : "border-slate-200"
+										}`}
+									/>
+								</div>
+								{errors.phone && (
+									<p className="mt-1 text-sm text-red-500">{errors.phone}</p>
+								)}
 							</div>
 
 							{errors.submit && (
@@ -194,11 +258,11 @@ export default function BusinessLogin() {
 									{isLoading ? (
 										<>
 											<div className="h-5 w-5 animate-spin rounded-full border-2 border-white/20 border-t-white" />
-											Logging in...
+											Creating account...
 										</>
 									) : (
 										<>
-											Log in
+											Create business account
 											<HiArrowRight className="h-5 w-5 transition-transform duration-200 group-hover:translate-x-1" />
 										</>
 									)}
@@ -206,59 +270,14 @@ export default function BusinessLogin() {
 							</button>
 						</form>
 
-						<div className="relative my-8">
-							<div className="absolute inset-0 flex items-center">
-								<div className="w-full border-t border-slate-200" />
-							</div>
-							<div className="relative flex justify-center text-sm">
-								<span className="bg-sky-50 px-4 text-slate-500">
-									Or continue with
-								</span>
-							</div>
-						</div>
-
-						<div className="grid grid-cols-2 gap-3">
-							<button className="flex cursor-pointer items-center justify-center gap-2 rounded-2xl border border-slate-200 bg-white px-4 py-3 shadow-sm transition hover:bg-slate-50">
-								<img
-									src="https://www.google.com/favicon.ico"
-									alt="Google"
-									className="h-5 w-5"
-								/>
-								<span className="text-sm font-medium text-slate-700">
-									Google
-								</span>
-							</button>
-							<button className="flex cursor-pointer items-center justify-center gap-2 rounded-2xl border border-slate-200 bg-white px-4 py-3 shadow-sm transition hover:bg-slate-50">
-								<img
-									src="https://github.com/favicon.ico"
-									alt="GitHub"
-									className="h-5 w-5"
-								/>
-								<span className="text-sm font-medium text-slate-700">
-									GitHub
-								</span>
-							</button>
-						</div>
-
 						<p className="mt-8 text-center text-sm text-slate-600">
-							Don't have an account?{" "}
+							Already have an account?{" "}
 							<Link
-								to="/business/create-account"
+								to="/business/login"
 								className="font-semibold text-sky-700 hover:text-sky-800">
-								Sign up for free
+								Log in
 							</Link>
 						</p>
-
-						<div className="mt-4 rounded-2xl border border-slate-200 bg-white p-4 text-center shadow-sm">
-							<p className="mb-2 text-sm text-slate-600">
-								Looking to book a service?
-							</p>
-							<Link
-								to="/customer/login"
-								className="text-sm font-semibold text-sky-700 hover:text-sky-800">
-								Customer login →
-							</Link>
-						</div>
 					</div>
 				</div>
 
@@ -269,34 +288,34 @@ export default function BusinessLogin() {
 
 						<div className="relative z-10 flex max-w-md flex-col items-center text-center">
 							<div className="mb-6 flex h-20 w-20 items-center justify-center rounded-3xl border border-white/70 bg-white/80 shadow-sm backdrop-blur">
-								<span className="text-4xl">📊</span>
+								<span className="text-4xl">🏢</span>
 							</div>
 
 							<h2 className="text-3xl font-bold tracking-tight text-slate-900">
-								Manage your business
+								Start building your
 								<br />
 								<span className="bg-gradient-to-r from-sky-600 to-cyan-600 bg-clip-text text-transparent">
-									from anywhere
+									business presence
 								</span>
 							</h2>
 
 							<p className="mt-4 text-lg leading-7 text-slate-600">
-								Access your dashboard, manage bookings, track revenue, and grow
-								your business—all in one place.
+								Create your account, manage your business details, and get ready
+								to accept bookings.
 							</p>
 
 							<div className="mt-8 grid w-full grid-cols-3 gap-4">
 								<div className="rounded-2xl border border-white/70 bg-white/80 p-4 shadow-sm backdrop-blur">
-									<div className="text-2xl font-bold text-sky-700">500+</div>
-									<div className="mt-1 text-xs text-slate-500">Businesses</div>
+									<div className="text-2xl font-bold text-sky-700">Fast</div>
+									<div className="mt-1 text-xs text-slate-500">Setup</div>
 								</div>
 								<div className="rounded-2xl border border-white/70 bg-white/80 p-4 shadow-sm backdrop-blur">
-									<div className="text-2xl font-bold text-sky-700">10k+</div>
-									<div className="mt-1 text-xs text-slate-500">Bookings</div>
+									<div className="text-2xl font-bold text-sky-700">Easy</div>
+									<div className="mt-1 text-xs text-slate-500">Signup</div>
 								</div>
 								<div className="rounded-2xl border border-white/70 bg-white/80 p-4 shadow-sm backdrop-blur">
-									<div className="text-2xl font-bold text-sky-700">4.9</div>
-									<div className="mt-1 text-xs text-slate-500">Rating</div>
+									<div className="text-2xl font-bold text-sky-700">Clean</div>
+									<div className="mt-1 text-xs text-slate-500">Dashboard</div>
 								</div>
 							</div>
 						</div>
