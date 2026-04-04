@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import StepIndicator from "../components/signup/StepIndicator";
-import Step1Account from "../components/signup/Step1Account";
-import Step2Category from "../components/signup/Step2Category";
-import Step3Details from "../components/signup/Step3Details";
-import Step4Service from "../components/signup/Step4Service";
-import Step5Hours from "../components/signup/Step5Hours";
-import Step6Success from "../components/signup/Step6Success";
+import StepIndicator from "../../components/signup/StepIndicator";
+import Step1Account from "../../components/signup/Step1Account";
+import Step2Category from "../../components/signup/Step2Category";
+import Step3Details from "../../components/signup/Step3Details";
+import Step4Service from "../../components/signup/Step4Service";
+import Step5Hours from "../../components/signup/Step5Hours";
+import Step6Success from "../../components/signup/Step6Success";
 
 interface SignupData {
 	email: string;

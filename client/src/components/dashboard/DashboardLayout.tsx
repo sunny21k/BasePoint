@@ -1,4 +1,4 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import {
 	HiHome,
 	HiCalendar,
@@ -8,6 +8,7 @@ import {
 	HiCog,
 } from "react-icons/hi";
 import { IoWalletOutline } from "react-icons/io5";
+import { useBusinessAuth } from "../../pages/BusinessPages/BusinessAuthContext";
 
 interface DashboardLayoutProps {
 	children: React.ReactNode;
@@ -28,6 +29,14 @@ const navItems = [
 ];
 
 export default function DashboardLayout({ children }: DashboardLayoutProps) {
+	const navigate = useNavigate();
+	const { logout } = useBusinessAuth();
+
+	const handleLogout = () => {
+		logout();
+		navigate("/business/login", { replace: true });
+	};
+
 	return (
 		<div className="min-h-screen bg-[radial-gradient(circle_at_top,rgba(16,185,129,0.10),transparent_28%),linear-gradient(180deg,#f8fafc_0%,#ecfeff_45%,#ffffff_100%)] text-slate-900">
 			<div className="flex min-h-screen">
@@ -71,7 +80,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
 						))}
 					</nav>
 
-					<div className="border-t border-slate-200 p-4">
+					<div className="border-t border-slate-200 p-4 space-y-3">
 						<div className="rounded-2xl border border-slate-200 bg-gradient-to-br from-slate-50 to-white p-4">
 							<p className="text-xs font-medium uppercase tracking-wide text-slate-500">
 								Workspace
@@ -83,6 +92,12 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
 								Everything you need to run your business in one place.
 							</p>
 						</div>
+
+						<button
+							onClick={handleLogout}
+							className="w-full cursor-pointer rounded-2xl bg-rose-600 px-4 py-3 text-sm font-semibold text-white transition hover:bg-rose-700">
+							Log out
+						</button>
 					</div>
 				</aside>
 
@@ -100,6 +115,12 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
 									<p className="text-xs text-slate-500">Business dashboard</p>
 								</div>
 							</div>
+
+							<button
+								onClick={handleLogout}
+								className="mb-6 w-full rounded-2xl bg-rose-600 px-4 py-3 text-sm font-semibold text-white transition hover:bg-rose-700">
+								Log out
+							</button>
 						</div>
 
 						<div className="space-y-6">{children}</div>

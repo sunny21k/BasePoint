@@ -8,6 +8,7 @@ type BusinessAuthContextType = {
 	accountStatus: AccountStatus;
 	isLoading: boolean;
 	refreshAuth: () => Promise<void>;
+	logout: () => void;
 };
 
 const BusinessAuthContext = createContext<BusinessAuthContextType | undefined>(
@@ -33,7 +34,6 @@ export function BusinessAuthProvider({
 			if (!token) {
 				setIsAuthenticated(false);
 				setAccountStatus("unknown");
-				setIsLoading(false);
 				return;
 			}
 
@@ -54,10 +54,17 @@ export function BusinessAuthProvider({
 			console.error("Auth check failed:", error);
 			setIsAuthenticated(false);
 			setAccountStatus("unknown");
-			localStorage.removeItem("token"); // Clear invalid token
+			localStorage.removeItem("token");
 		} finally {
 			setIsLoading(false);
 		}
+	};
+
+	const logout = () => {
+		localStorage.removeItem("token");
+		setIsAuthenticated(false);
+		setAccountStatus("unknown");
+		setIsLoading(false);
 	};
 
 	useEffect(() => {
@@ -71,6 +78,7 @@ export function BusinessAuthProvider({
 				accountStatus,
 				isLoading,
 				refreshAuth: fetchAuth,
+				logout,
 			}}>
 			{children}
 		</BusinessAuthContext.Provider>
