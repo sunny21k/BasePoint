@@ -5,8 +5,8 @@ export interface IBusiness {
     businessName: string;
     email: string;
     phone: string;
-    businessType?: string;
-    businessAddress?: string;
+    businessType: string;
+    businessAddress: string;
     websiteOrSocial?: string;
     description?: string;
     accountStatus: "pending" | "approved" | "rejected";
@@ -38,15 +38,13 @@ const businessSchema = new Schema<IBusiness>(
         },
         businessType: {
             type: String,
-            required: false,
+            required: true,
             trim: true,
-            default: "",
         },
         businessAddress: {
             type: String,
-            required: false,
+            required: true,
             trim: true,
-            default: "",
         },
         websiteOrSocial: {
             type: String,

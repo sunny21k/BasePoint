@@ -58,9 +58,19 @@ export default function BusinessLogin() {
 
 			const { token, user } = response.data;
 
-			// Save token
+			// Check if it's actually a business account
+			if (user.role !== "business") {
+				setErrors({
+					submit:
+						"This is a customer account. Please use the customer login page.",
+				});
+				return;
+			}
+
+			// Save token and role
 			localStorage.setItem("token", token);
-			console.log("Token saved:", token);
+			localStorage.setItem("role", user.role); // ADD THIS!
+			console.log("Token and role saved");
 
 			// Refresh auth state
 			await refreshAuth();
@@ -69,6 +79,7 @@ export default function BusinessLogin() {
 			setTimeout(() => {
 				console.log("Navigating to dashboard...");
 				navigate("/business/dashboard", { replace: true });
+				window.location.reload(); // Force reload to update navbar
 			}, 100);
 		} catch (error: any) {
 			console.error("Login error:", error);

@@ -79,13 +79,6 @@ export const registerBusiness = async (req: Request, res: Response) => {
             });
         }
 
-        const existingBusiness = await Business.findOne({ email });
-        if (existingBusiness) {
-            return res.status(400).json({
-                message: "Business already exists",
-            });
-        }
-
         const hashedPassword = await bcrypt.hash(password, 10);
 
         const user = await User.create({
@@ -95,18 +88,6 @@ export const registerBusiness = async (req: Request, res: Response) => {
             businessName,
             ownerName,
             phone,
-            accountStatus: "pending",
-        });
-
-        const business = await Business.create({
-            ownerName,
-            businessName,
-            email,
-            phone,
-            businessType: "",
-            businessAddress: "",
-            websiteOrSocial: "",
-            description: "",
             accountStatus: "pending",
         });
 
@@ -121,24 +102,13 @@ export const registerBusiness = async (req: Request, res: Response) => {
                 phone: user.phone,
                 accountStatus: user.accountStatus,
             },
-            business: {
-                id: business._id,
-                ownerName: business.ownerName,
-                businessName: business.businessName,
-                email: business.email,
-                phone: business.phone,
-                businessType: business.businessType,
-                businessAddress: business.businessAddress,
-                websiteOrSocial: business.websiteOrSocial,
-                description: business.description,
-                accountStatus: business.accountStatus,
-            },
             token: generateToken(user._id.toString(), user.role),
         });
-    } catch (error) {
+    } catch (error: any) {
+        console.error("registerBusiness error:", error);
         return res.status(500).json({
             message: "Server error",
-            error,
+            errorMessage: error?.message || "Unknown error",
         });
     }
 };

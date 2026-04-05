@@ -2,8 +2,9 @@ import dotenv from "dotenv";
 import express from "express";
 import connectDB from "./config/db";
 import cors from "cors";
-import authRoutes from "./routes/authRoutes"
-import businessRoutes from "./routes/businessRoutes"
+import authRoutes from "./routes/authRoutes";
+import businessRoutes from "./routes/businessRoutes";
+import adminRoutes from "./routes/adminRoutes"; 
 
 dotenv.config();
 
@@ -12,12 +13,17 @@ const PORT = process.env.PORT || 3000;
 
 connectDB();
 
-app.use(cors());
+app.use(cors({
+  origin: ["http://localhost:5173", "http://localhost:5000"],
+  credentials: true,
+}));
+
 app.use(express.json()); 
 app.use(express.urlencoded({ extended: true }));
 
 app.use("/api/auth", authRoutes);
-app.use("/api/business", businessRoutes)
+app.use("/api/business", businessRoutes);
+app.use("/api/admin", adminRoutes);  
 
 app.get("/", (_req, res) => {
   res.send("API is running");

@@ -118,7 +118,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
 
 							<button
 								onClick={handleLogout}
-								className="mb-6 w-full rounded-2xl bg-rose-600 px-4 py-3 text-sm font-semibold text-white transition hover:bg-rose-700">
+								className="mb-6 w-full rounded-2xl bg-red-600 px-4 py-3 text-sm font-semibold text-white transition hover:bg-red-700">
 								Log out
 							</button>
 						</div>

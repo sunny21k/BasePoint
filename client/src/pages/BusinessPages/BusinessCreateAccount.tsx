@@ -72,13 +72,17 @@ export default function BusinessCreateAccount() {
 
 			console.log("Signup success:", response.data);
 
-			const { token } = response.data;
+			const { token, user } = response.data;
+
+			// Save token and role
 			localStorage.setItem("token", token);
+			localStorage.setItem("role", user.role);
 
 			await refreshAuth();
 
 			setTimeout(() => {
-				navigate("/business/dashboard", { replace: true });
+				navigate("/business/verification", { replace: true });
+				window.location.reload();
 			}, 100);
 		} catch (error: any) {
 			console.error("Signup error:", error);

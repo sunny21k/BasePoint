@@ -56,13 +56,24 @@ export default function CustomerLogin() {
 
 			const { user, token } = response.data;
 
+			// Check if it's actually a customer account
 			if (user.role !== "customer") {
-				navigate("/account-mismatch", { replace: true });
+				setErrors({
+					submit:
+						"This is a business account. Please use the business login page.",
+				});
 				return;
 			}
 
+			// Save both token and role
 			localStorage.setItem("token", token);
+			localStorage.setItem("role", user.role); // ADD THIS!
+
+			// Redirect to customer home
 			navigate("/customer/home", { replace: true });
+
+			// Force reload to update navbar
+			window.location.reload();
 		} catch (error: any) {
 			setErrors({
 				submit:
