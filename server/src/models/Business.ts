@@ -1,6 +1,7 @@
-import { Schema, model, models } from "mongoose";
+import { Schema, model, models, Types } from "mongoose";
 
 export interface IBusiness {
+    userId: Types.ObjectId;
     ownerName: string;
     businessName: string;
     email: string;
@@ -9,11 +10,16 @@ export interface IBusiness {
     businessAddress: string;
     websiteOrSocial?: string;
     description?: string;
-    accountStatus: "pending" | "approved" | "rejected";
+    isOnBoarded: boolean;
 }
 
 const businessSchema = new Schema<IBusiness>(
     {
+        userId: {
+            type: Schema.Types.ObjectId,
+            ref: "User",
+            required: true,
+        },
         ownerName: {
             type: String,
             required: true,
@@ -56,15 +62,14 @@ const businessSchema = new Schema<IBusiness>(
             trim: true,
             default: "",
         },
-        accountStatus: {
-            type: String,
-            enum: ["pending", "approved", "rejected"],
-            default: "pending",
+        isOnBoarded: {
+            type: Boolean,
+            required: true,
+            default: false,
         },
     },
-    { timestamps: true }
+    { timestamps: true },
 );
 
 const Business = models.Business || model<IBusiness>("Business", businessSchema);
-
 export default Business;
