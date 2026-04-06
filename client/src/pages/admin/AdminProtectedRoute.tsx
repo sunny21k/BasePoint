@@ -5,9 +5,7 @@ export default function AdminProtectedRoute() {
 	const { admin, token, loading } = useAdminAuth();
 	const location = useLocation();
 
-	if (loading) {
-		return null;
-	}
+	if (loading) return null;
 
 	if (!token || !admin || admin.role !== "admin") {
 		return <Navigate to="/admin/login" replace state={{ from: location }} />;

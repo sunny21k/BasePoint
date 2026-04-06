@@ -1,6 +1,13 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { HiCheck, HiX, HiRefresh, HiShieldCheck } from "react-icons/hi";
+import {
+	HiCheck,
+	HiX,
+	HiRefresh,
+	HiShieldCheck,
+	HiLogout,
+} from "react-icons/hi";
+import { useAdminAuth } from "./AdminAuthContext";
 
 type PendingBusiness = {
 	_id: string;
@@ -20,7 +27,7 @@ export default function AdminDashboard() {
 	const [actionLoading, setActionLoading] = useState<string | null>(null);
 	const [error, setError] = useState("");
 
-	const token = localStorage.getItem("adminToken");
+	const { token, logout } = useAdminAuth();
 
 	const fetchPendingBusinesses = async () => {
 		try {
@@ -75,7 +82,7 @@ export default function AdminDashboard() {
 		try {
 			setActionLoading(id);
 			await axios.patch(
-				`http://localhost:3000/api/admin/businesses/${id}/reject`,
+				`http://localhost:5000/api/admin/businesses/${id}/reject`,
 				{},
 				{
 					headers: {
@@ -90,6 +97,10 @@ export default function AdminDashboard() {
 		} finally {
 			setActionLoading(null);
 		}
+	};
+
+	const handleLogoutClick = () => {
+		logout();
 	};
 
 	return (
@@ -109,12 +120,21 @@ export default function AdminDashboard() {
 						</p>
 					</div>
 
-					<button
-						onClick={fetchPendingBusinesses}
-						className="inline-flex items-center cursor-pointer justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium shadow-sm transition hover:bg-slate-100">
-						<HiRefresh className="h-4 w-4" />
-						Refresh
-					</button>
+					<div className="flex flex-wrap gap-3">
+						<button
+							onClick={fetchPendingBusinesses}
+							className="inline-flex items-center cursor-pointer justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium shadow-sm transition hover:bg-slate-100">
+							<HiRefresh className="h-4 w-4" />
+							Refresh
+						</button>
+
+						<button
+							onClick={handleLogoutClick}
+							className="inline-flex items-center cursor-pointer justify-center gap-2 rounded-xl bg-slate-900 px-4 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-slate-800">
+							<HiLogout className="h-4 w-4" />
+							Logout
+						</button>
+					</div>
 				</div>
 
 				{error && (
