@@ -90,6 +90,7 @@ export const saveBusinessVerification = async (req: AuthRequest, res: Response) 
 
         user.businessName = businessName;
         user.accountStatus = "pending";
+        user.verificationStatus = "submitted";
         await user.save();
 
         return res.status(200).json({
