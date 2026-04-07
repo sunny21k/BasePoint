@@ -6,6 +6,7 @@ type AccountStatus = "approved" | "pending" | "rejected" | "unknown";
 type BusinessAuthContextType = {
 	isAuthenticated: boolean;
 	accountStatus: AccountStatus;
+	isOnBoarded: boolean;
 	isLoading: boolean;
 	refreshAuth: () => Promise<void>;
 	logout: () => void;
@@ -24,6 +25,7 @@ export function BusinessAuthProvider({
 }) {
 	const [isAuthenticated, setIsAuthenticated] = useState(false);
 	const [accountStatus, setAccountStatus] = useState<AccountStatus>("unknown");
+	const [isOnBoarded, setIsOnBoarded] = useState(false);
 	const [isLoading, setIsLoading] = useState(true);
 
 	const fetchAuth = async () => {
@@ -34,6 +36,7 @@ export function BusinessAuthProvider({
 			if (!token) {
 				setIsAuthenticated(false);
 				setAccountStatus("unknown");
+				setIsOnBoarded(false);
 				return;
 			}
 
@@ -46,14 +49,17 @@ export function BusinessAuthProvider({
 			if (response.data.user) {
 				setIsAuthenticated(true);
 				setAccountStatus(response.data.user.accountStatus || "unknown");
+				setIsOnBoarded(Boolean(response.data.business?.isOnBoarded));
 			} else {
 				setIsAuthenticated(false);
 				setAccountStatus("unknown");
+				setIsOnBoarded(false);
 			}
 		} catch (error) {
 			console.error("Auth check failed:", error);
 			setIsAuthenticated(false);
 			setAccountStatus("unknown");
+			setIsOnBoarded(false);
 			localStorage.removeItem("token");
 		} finally {
 			setIsLoading(false);
@@ -64,6 +70,7 @@ export function BusinessAuthProvider({
 		localStorage.removeItem("token");
 		setIsAuthenticated(false);
 		setAccountStatus("unknown");
+		setIsOnBoarded(false);
 		setIsLoading(false);
 	};
 
@@ -76,6 +83,7 @@ export function BusinessAuthProvider({
 			value={{
 				isAuthenticated,
 				accountStatus,
+				isOnBoarded,
 				isLoading,
 				refreshAuth: fetchAuth,
 				logout,

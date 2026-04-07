@@ -7,6 +7,8 @@ import BusinessOnboarding from "./pages/BusinessPages/BusinessOnboarding";
 import BusinessLogin from "./pages/BusinessPages/BusinessLogin";
 import BusinessCreateAccount from "./pages/BusinessPages/BusinessCreateAccount";
 import BusinessVerification from "./pages/BusinessPages/BusinessVerification";
+import PendingReview from "./pages/PendingReview";
+import RejectedPage from "./pages/BusinessPages/RejectedPage";
 
 import DashboardOverviewPage from "./pages/Dashboard";
 import DashboardCalenderPage from "./pages/DashboardPages/DashboardCalenderPage";
@@ -24,7 +26,6 @@ import CustomerHome from "./pages/CustomerPages/CustomerHome";
 
 import About from "./pages/About";
 import PricePage from "./pages/PricePage";
-import PendingReview from "./pages/PendingReview";
 import Support from "./pages/Support";
 import AccountMismatch from "./pages/AccountMismatch";
 
@@ -34,6 +35,9 @@ import AdminDashboard from "./pages/admin/AdminDashboard";
 import ProtectedRoute from "./routeprotection/ProtectedRoute";
 import RoleRoute from "./routeprotection/RoleRoute";
 import AdminProtectedRoute from "./pages/admin/AdminProtectedRoute";
+
+import BusinessProtectedRoute from "./pages/BusinessPages/BusinessProtectedRoute";
+import BusinessStatusRoute from "./pages/BusinessPages/BusinessStatusRoute";
 
 import { BusinessAuthProvider } from "./pages/BusinessPages/BusinessAuthContext";
 import { AdminAuthProvider } from "./pages/admin/AdminAuthContext";
@@ -54,6 +58,10 @@ function App() {
 
 						<Route path="/account-mismatch" element={<AccountMismatch />} />
 						<Route path="/business/login" element={<BusinessLogin />} />
+						<Route
+							path="/business/create-account"
+							element={<BusinessCreateAccount />}
+						/>
 						<Route path="/customer/signup" element={<CustomerSignup />} />
 						<Route path="/customer/login" element={<CustomerLogin />} />
 						<Route path="/admin/login" element={<AdminLogin />} />
@@ -61,14 +69,24 @@ function App() {
 						<Route element={<ProtectedRoute />}>
 							<Route element={<RoleRoute allowedRole="business" />}>
 								<Route
-									path="/business/onboarding"
-									element={<BusinessOnboarding />}
-								/>
-								<Route
 									path="/business/verification"
 									element={<BusinessVerification />}
 								/>
+							</Route>
+
+							<Route element={<RoleRoute allowedRole="customer" />}>
+								<Route path="/customer/home" element={<CustomerHome />} />
+							</Route>
+						</Route>
+
+						<Route element={<BusinessProtectedRoute />}>
+							<Route element={<BusinessStatusRoute />}>
 								<Route path="/business/pending" element={<PendingReview />} />
+								<Route path="/business/rejected" element={<RejectedPage />} />
+								<Route
+									path="/business/onboarding"
+									element={<BusinessOnboarding />}
+								/>
 								<Route
 									path="/business/dashboard"
 									element={<DashboardOverviewPage />}
@@ -102,20 +120,11 @@ function App() {
 									element={<DashboardSettings />}
 								/>
 							</Route>
-
-							<Route element={<RoleRoute allowedRole="customer" />}>
-								<Route path="/customer/home" element={<CustomerHome />} />
-							</Route>
 						</Route>
 
 						<Route element={<AdminProtectedRoute />}>
 							<Route path="/admin" element={<AdminDashboard />} />
 						</Route>
-
-						<Route
-							path="/business/create-account"
-							element={<BusinessCreateAccount />}
-						/>
 
 						<Route path="*" element={<Navigate to="/" replace />} />
 					</Routes>
