@@ -5,7 +5,7 @@ import Business from "../models/Business";
 interface AuthRequest extends Request {
     user?: {
         id: string;
-    }
+    };
 }
 
 export const getCurrentUser = async (req: AuthRequest, res: Response) => {
@@ -13,30 +13,23 @@ export const getCurrentUser = async (req: AuthRequest, res: Response) => {
         const userId = req.user?.id;
 
         if (!userId) {
-            return res.status(401).json({
-                message: "Not authorized"
-            })
+            return res.status(401).json({ message: "Not authorized" });
         }
 
         const user = await User.findById(userId).select("-password");
 
         if (!user) {
-            return res.status(404).json({ 
-                message: "User not found" 
-            });
+            return res.status(404).json({ message: "User not found" });
         }
 
-        return res.status(200).json({
-            user,
-        })
+        return res.status(200).json({ user });
     } catch (error) {
         return res.status(500).json({
-            message: "Server error", 
-            error}
-        );
+            message: "Server error",
+            error,
+        });
     }
-}
-
+};
 
 export const saveBusinessVerification = async (req: AuthRequest, res: Response) => {
     try {
@@ -68,20 +61,21 @@ export const saveBusinessVerification = async (req: AuthRequest, res: Response) 
             return res.status(404).json({ message: "User not found" });
         }
 
-        let business = await Business.findOne({ email });
+        let business = await Business.findOne({ userId });
 
         if (business) {
             business.ownerName = ownerName;
             business.businessName = businessName;
+            business.email = email;
             business.phone = phone;
             business.businessType = businessType;
             business.businessAddress = businessAddress;
             business.websiteOrSocial = websiteOrSocial || "";
             business.description = description || "";
-            business.accountStatus = "pending";
             await business.save();
         } else {
             business = await Business.create({
+                userId,
                 ownerName,
                 businessName,
                 email,
@@ -90,13 +84,11 @@ export const saveBusinessVerification = async (req: AuthRequest, res: Response) 
                 businessAddress,
                 websiteOrSocial: websiteOrSocial || "",
                 description: description || "",
-                accountStatus: "pending",
+                isOnBoarded: false,
             });
         }
 
-        user.ownerName = ownerName;
         user.businessName = businessName;
-        user.phone = phone;
         user.accountStatus = "pending";
         await user.save();
 

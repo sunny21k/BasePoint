@@ -63,63 +63,69 @@ export const loginAdmin = async (req: Request, res: Response) => {
     }
 };
 
+export const getAllBusinesses = async (req: Request, res: Response) => {
+    try {
+        const businesses = await Business.find().sort({ createdAt: -1 });
+        return res.status(200).json(businesses);
+    } catch (error) {
+        return res.status(500).json({
+            message: "Failed to fetch businesses",
+        });
+    }
+};
+
+export const updateBusinessStatus = async (req: Request, res: Response) => {
+    try {
+        const { id } = req.params;
+        const { accountStatus } = req.body as {
+            accountStatus: "pending" | "approved" | "rejected";
+        };
+
+        if (!accountStatus) {
+            return res.status(400).json({ message: "accountStatus is required" });
+        }
+
+        if (!["pending", "approved", "rejected"].includes(accountStatus)) {
+            return res.status(400).json({ message: "Invalid accountStatus value" });
+        }
+
+        const business = await Business.findById(id);
+
+        if (!business) {
+            return res.status(404).json({ message: "Business not found" });
+        }
+
+        const user = await User.findById(business.userId);
+
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        user.accountStatus = accountStatus;
+        await user.save();
+
+        return res.status(200).json({
+            message: `Business status updated to ${accountStatus}`,
+            business,
+            user,
+        });
+    } catch (error) {
+        return res.status(500).json({
+            message: "Failed to update business status",
+        });
+    }
+};
+
 export const getPendingBusinesses = async (req: Request, res: Response) => {
     try {
-        const businesses = await Business.find({ accountStatus: "pending" })
-            .sort({ createdAt: -1 });
+        const businesses = await Business.find({ isOnBoarded: false }).sort({
+            createdAt: -1,
+        });
 
         return res.status(200).json(businesses);
     } catch (error) {
         return res.status(500).json({
             message: "Failed to fetch pending businesses",
-        });
-    }
-};
-
-export const approveBusiness = async (req: Request, res: Response) => {
-    try {
-        const { id } = req.params;
-
-        const business = await Business.findById(id);
-
-        if (!business) {
-            return res.status(404).json({ message: "Business not found" });
-        }
-
-        business.accountStatus = "approved";
-        await business.save();
-
-        return res.status(200).json({
-            message: "Business approved successfully",
-            business,
-        });
-    } catch (error) {
-        return res.status(500).json({
-            message: "Failed to approve business",
-        });
-    }
-};
-
-export const rejectBusiness = async (req: Request, res: Response) => {
-    try {
-        const { id } = req.params;
-
-        const business = await Business.findById(id);
-
-        if (!business) {
-            return res.status(404).json({ message: "Business not found" });
-        }
-
-        business.accountStatus = "rejected";
-        await business.save();
-
-        return res.status(200).json({
-            message: "Business rejected successfully",
-            business,
-        });
-    } catch (error) {
-        return res.status(500).json({
-            message: "Failed to reject business",
         });
     }
 };

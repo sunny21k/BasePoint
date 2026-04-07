@@ -1,21 +1,19 @@
 import { Router } from "express";
-import { loginAdmin } from "../controllers/adminController";
 import {
+    loginAdmin,
     getPendingBusinesses,
-    approveBusiness,
-    rejectBusiness,
+    updateBusinessStatus,
+    getAllBusinesses,
 } from "../controllers/adminController";
 import authMiddleware from "../middleware/authMiddleware";
 import isAdmin from "../middleware/isAdminMiddleware";
 
 const router = Router();
 
-// Public route
 router.post("/login", loginAdmin);
 
-// Protected admin routes
+router.get("/businesses", authMiddleware, isAdmin, getAllBusinesses);
 router.get("/businesses/pending", authMiddleware, isAdmin, getPendingBusinesses);
-router.patch("/businesses/:id/approve", authMiddleware, isAdmin, approveBusiness);
-router.patch("/businesses/:id/reject", authMiddleware, isAdmin, rejectBusiness);
+router.patch("/businesses/:id/status", authMiddleware, isAdmin, updateBusinessStatus);
 
 export default router;
