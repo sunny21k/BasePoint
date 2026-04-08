@@ -48,6 +48,7 @@ function App() {
 			<BrowserRouter>
 				<AdminAuthProvider>
 					<Routes>
+						{/* Public pages */}
 						<Route element={<Layout />}>
 							<Route path="/" element={<Home />} />
 							<Route path="/search" element={<Search />} />
@@ -66,21 +67,21 @@ function App() {
 						<Route path="/customer/login" element={<CustomerLogin />} />
 						<Route path="/admin/login" element={<AdminLogin />} />
 
+						{/* Customer protected routes */}
 						<Route element={<ProtectedRoute />}>
-							<Route element={<RoleRoute allowedRole="business" />}>
-								<Route
-									path="/business/verification"
-									element={<BusinessVerification />}
-								/>
-							</Route>
-
 							<Route element={<RoleRoute allowedRole="customer" />}>
 								<Route path="/customer/home" element={<CustomerHome />} />
 							</Route>
 						</Route>
 
+						{/* Business protected routes */}
 						<Route element={<BusinessProtectedRoute />}>
 							<Route element={<BusinessStatusRoute />}>
+								{/* Status-aware business pages */}
+								<Route
+									path="/business/verification"
+									element={<BusinessVerification />}
+								/>
 								<Route path="/business/pending" element={<PendingReview />} />
 								<Route path="/business/rejected" element={<RejectedPage />} />
 								<Route
@@ -122,10 +123,12 @@ function App() {
 							</Route>
 						</Route>
 
+						{/* Admin protected routes */}
 						<Route element={<AdminProtectedRoute />}>
 							<Route path="/admin" element={<AdminDashboard />} />
 						</Route>
 
+						{/* Catch-all */}
 						<Route path="*" element={<Navigate to="/" replace />} />
 					</Routes>
 				</AdminAuthProvider>

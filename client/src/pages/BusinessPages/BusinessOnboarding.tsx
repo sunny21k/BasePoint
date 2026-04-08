@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import StepIndicator from "../../components/signup/StepIndicator";
-import Step1Account from "../../components/signup/Step1Account";
+import Step1Preferences from "../../components/signup/Step1Preferences";
 import Step2Category from "../../components/signup/Step2Category";
 import Step3Details from "../../components/signup/Step3Details";
 import Step4Service from "../../components/signup/Step4Service";
@@ -16,6 +16,12 @@ interface SignupData {
 	address: string;
 	phone: string;
 	description: string;
+	preferences: {
+		bookingType: "in-person" | "online" | "both";
+		bufferTime: number;
+		maxBookingsPerDay: number;
+		allowCancellations: boolean;
+	};
 	services: Array<{
 		name: string;
 		price: number;
@@ -35,6 +41,12 @@ export default function BusinessOnboarding() {
 		address: "",
 		phone: "",
 		description: "",
+		preferences: {
+			bookingType: "in-person",
+			bufferTime: 0,
+			maxBookingsPerDay: 10,
+			allowCancellations: true,
+		},
 		services: [],
 		hours: {
 			monday: { open: "09:00", close: "17:00", isOpen: true },
@@ -82,12 +94,8 @@ export default function BusinessOnboarding() {
 
 					<div className="mt-8">
 						{currentStep === 1 && (
-							<Step1Account
-								data={{
-									email: formData.email,
-									password: formData.password,
-									businessName: formData.businessName,
-								}}
+							<Step1Preferences
+								data={{ preferences: formData.preferences }}
 								onUpdate={updateField}
 								onNext={nextStep}
 							/>

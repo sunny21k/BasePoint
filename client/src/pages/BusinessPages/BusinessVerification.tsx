@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useBusinessAuth } from "./BusinessAuthContext";
 import {
 	HiArrowRight,
 	HiPhone,
@@ -25,6 +26,7 @@ const businessTypes = [
 ];
 
 export default function BusinessVerification() {
+	const { refreshAuth } = useBusinessAuth();
 	const navigate = useNavigate();
 	const [currentStep, setCurrentStep] = useState(1);
 	const [isLoading, setIsLoading] = useState(false);
@@ -99,6 +101,8 @@ export default function BusinessVerification() {
 					},
 				},
 			);
+
+			await refreshAuth();
 
 			navigate("/business/pending", { replace: true });
 		} catch (error: any) {

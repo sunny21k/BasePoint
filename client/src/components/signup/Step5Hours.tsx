@@ -1,3 +1,5 @@
+import { HiOutlineInformationCircle } from "react-icons/hi";
+
 interface Hours {
 	open: string;
 	close: string;
@@ -51,6 +53,19 @@ export default function Step5Hours({
 					<p className="mt-2 text-sm leading-6 text-slate-500">
 						When are you available for bookings each day?
 					</p>
+					<p className="mt-2 text-xs leading-5 text-slate-400">
+						You can change these later anytime.
+					</p>
+				</div>
+
+				<div className="mb-4 rounded-2xl border border-slate-200 bg-slate-50/80 px-4 py-3">
+					<div className="flex items-start gap-3">
+						<HiOutlineInformationCircle className="mt-0.5 h-5 w-5 text-emerald-600" />
+						<p className="text-xs leading-5 text-slate-500">
+							Set each day open or closed, then choose the hours customers can
+							book.
+						</p>
+					</div>
 				</div>
 
 				<div className="space-y-3">
@@ -60,7 +75,11 @@ export default function Step5Hours({
 						return (
 							<div
 								key={day.key}
-								className="rounded-2xl border border-slate-200 bg-gradient-to-br from-white to-slate-50 p-4 shadow-sm">
+								className={`rounded-2xl border p-4 shadow-sm transition ${
+									isOpen
+										? "border-emerald-200 bg-gradient-to-br from-white to-emerald-50/40"
+										: "border-slate-200 bg-gradient-to-br from-white to-slate-50"
+								}`}>
 								<div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
 									<label className="flex cursor-pointer items-center gap-3">
 										<input
@@ -82,7 +101,7 @@ export default function Step5Hours({
 									</label>
 
 									{isOpen ? (
-										<div className="flex items-center gap-3">
+										<div className="flex flex-wrap items-center gap-3">
 											<input
 												type="time"
 												value={data.hours[day.key].open}

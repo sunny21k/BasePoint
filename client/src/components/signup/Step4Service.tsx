@@ -1,5 +1,13 @@
 import { useState } from "react";
-import { HiPlus, HiX } from "react-icons/hi";
+import {
+	HiPlus,
+	HiX,
+	HiOutlineInformationCircle,
+	HiOutlineClock,
+	HiOutlineTag,
+	HiOutlineSparkles,
+	HiOutlineChevronDown,
+} from "react-icons/hi";
 
 interface Service {
 	name: string;
@@ -35,36 +43,42 @@ export default function Step4Service({
 			price: 35,
 			duration: 30,
 			description: "Classic haircut with wash and style",
+			badge: "Popular",
 		},
 		{
 			name: "Women's Haircut",
 			price: 65,
 			duration: 60,
 			description: "Cut and style",
+			badge: "Popular",
 		},
 		{
 			name: "Beard Trim",
 			price: 20,
 			duration: 15,
 			description: "Shape and edge up",
+			badge: "Quick add",
 		},
 		{
 			name: "Personal Training",
 			price: 75,
 			duration: 60,
 			description: "One-on-one training session",
+			badge: "Popular",
 		},
 		{
 			name: "Yoga Class",
 			price: 25,
 			duration: 60,
 			description: "Group yoga session",
+			badge: "Quick add",
 		},
 		{
 			name: "Massage (60min)",
 			price: 90,
 			duration: 60,
 			description: "Relaxation massage",
+			badge: "Popular",
 		},
 	];
 
@@ -89,14 +103,19 @@ export default function Step4Service({
 	};
 
 	const useTemplate = (template: (typeof templates)[0]) => {
-		setCurrentService(template);
+		setCurrentService({
+			name: template.name,
+			price: template.price,
+			duration: template.duration,
+			description: template.description,
+		});
 		setShowForm(true);
 	};
 
 	const isValidCurrent = currentService.name && currentService.price > 0;
 
 	return (
-		<div className="mx-auto w-full max-w-4xl px-4">
+		<div className="mx-auto w-full max-w-5xl px-4">
 			<div className="rounded-[1.75rem] border border-slate-200 bg-white/90 p-6 shadow-[0_20px_60px_rgba(15,23,42,0.08)] backdrop-blur-sm lg:p-8">
 				<div className="mb-8 text-center">
 					<h2 className="text-2xl font-semibold tracking-tight text-slate-900">
@@ -105,69 +124,109 @@ export default function Step4Service({
 					<p className="mt-2 text-sm leading-6 text-slate-500">
 						What do you offer? Start with at least one to continue.
 					</p>
+					<p className="mt-2 text-xs leading-5 text-slate-400">
+						You can change these later anytime.
+					</p>
 				</div>
 
 				{data.services.length > 0 && (
-					<div className="mb-6 space-y-3">
-						{data.services.map((service, idx) => (
-							<div
-								key={idx}
-								className="flex items-start justify-between gap-4 rounded-2xl border border-slate-200 bg-gradient-to-br from-slate-50 to-white p-4 shadow-sm">
-								<div className="min-w-0 flex-1">
-									<h4 className="text-sm font-semibold text-slate-900">
-										{service.name}
-									</h4>
-									<p className="mt-1 text-xs text-slate-500">
-										${service.price} • {service.duration} min
-									</p>
-									{service.description && (
-										<p className="mt-2 text-xs leading-5 text-slate-500">
-											{service.description}
-										</p>
-									)}
-								</div>
-
-								<button
-									type="button"
-									onClick={() => removeService(idx)}
-									className="cursor-pointer rounded-full border border-slate-200 bg-white p-2 text-slate-400 transition hover:border-red-200 hover:bg-red-50 hover:text-red-500"
-									aria-label="Remove service">
-									<HiX className="h-4 w-4" />
-								</button>
-							</div>
-						))}
-					</div>
-				)}
-
-				{!showForm && (
 					<div className="mb-6">
-						<p className="mb-3 text-sm text-slate-500">
-							Or start from a template:
-						</p>
-						<div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-							{templates.map((template, idx) => (
-								<button
+						<div className="mb-3 flex items-center gap-2">
+							<HiOutlineSparkles className="h-5 w-5 text-emerald-600" />
+							<h3 className="text-sm font-semibold text-slate-900">
+								Added services
+							</h3>
+						</div>
+
+						<div className="space-y-3">
+							{data.services.map((service, idx) => (
+								<div
 									key={idx}
-									type="button"
-									onClick={() => useTemplate(template)}
-									className="cursor-pointer rounded-2xl border border-slate-200 bg-white p-4 text-left shadow-sm transition hover:-translate-y-0.5 hover:border-emerald-200 hover:bg-emerald-50/60 hover:shadow-md">
-									<h4 className="text-sm font-semibold text-slate-900">
-										{template.name}
-									</h4>
-									<p className="mt-1 text-xs text-slate-500">
-										${template.price} • {template.duration} min
-									</p>
-									<p className="mt-2 text-xs leading-5 text-slate-500">
-										{template.description}
-									</p>
-								</button>
+									className="flex items-start justify-between gap-4 rounded-2xl border border-slate-200 bg-gradient-to-br from-slate-50 to-white p-4 shadow-sm">
+									<div className="min-w-0 flex-1">
+										<h4 className="text-sm font-semibold text-slate-900">
+											{service.name}
+										</h4>
+										<p className="mt-1 text-xs text-slate-500">
+											${service.price} • {service.duration} min
+										</p>
+										{service.description && (
+											<p className="mt-2 text-xs leading-5 text-slate-500">
+												{service.description}
+											</p>
+										)}
+									</div>
+
+									<button
+										type="button"
+										onClick={() => removeService(idx)}
+										className="cursor-pointer rounded-full border border-slate-200 bg-white p-2 text-slate-400 transition hover:border-red-200 hover:bg-red-50 hover:text-red-500"
+										aria-label="Remove service">
+										<HiX className="h-4 w-4" />
+									</button>
+								</div>
 							))}
 						</div>
 					</div>
 				)}
 
+				<div className="mb-8 rounded-3xl border border-slate-200 bg-slate-50/80 p-5">
+					<div className="mb-3 flex items-center gap-2">
+						<HiOutlineSparkles className="h-5 w-5 text-emerald-600" />
+						<h3 className="text-sm font-semibold text-slate-900">
+							Quick start templates
+						</h3>
+					</div>
+					<p className="mb-4 text-xs leading-5 text-slate-500">
+						Pick one to auto-fill the form, then edit it to match your business.
+					</p>
+
+					<div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+						{templates.map((template, idx) => (
+							<button
+								key={idx}
+								type="button"
+								onClick={() => useTemplate(template)}
+								className="group relative cursor-pointer rounded-2xl border border-slate-200 bg-white p-4 text-left shadow-sm transition hover:-translate-y-0.5 hover:border-emerald-200 hover:bg-emerald-50/60 hover:shadow-md">
+								<div className="absolute right-3 top-3 rounded-full bg-emerald-50 px-2.5 py-1 text-[11px] font-semibold text-emerald-700">
+									{template.badge}
+								</div>
+
+								<h4 className="pr-16 text-sm font-semibold text-slate-900">
+									{template.name}
+								</h4>
+								<p className="mt-1 text-xs leading-5 text-slate-500">
+									{template.description}
+								</p>
+
+								<div className="mt-4 flex items-center gap-4 text-xs text-slate-500">
+									<span className="inline-flex items-center gap-1">
+										<HiOutlineTag className="h-4 w-4" />${template.price}
+									</span>
+									<span className="inline-flex items-center gap-1">
+										<HiOutlineClock className="h-4 w-4" />
+										{template.duration} min
+									</span>
+								</div>
+
+								<div className="mt-4 inline-flex items-center gap-1 text-xs font-medium text-emerald-700 opacity-0 transition group-hover:opacity-100">
+									Use template
+									<HiOutlineChevronDown className="h-4 w-4 rotate-[-90deg]" />
+								</div>
+							</button>
+						))}
+					</div>
+				</div>
+
 				{showForm ? (
 					<div className="rounded-2xl border border-slate-200 bg-gradient-to-br from-white to-slate-50 p-6 shadow-sm">
+						<div className="mb-4 flex items-center gap-2">
+							<HiOutlineInformationCircle className="h-5 w-5 text-emerald-600" />
+							<p className="text-sm font-medium text-slate-700">
+								Add or edit a service below
+							</p>
+						</div>
+
 						<div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
 							<div>
 								<label className="mb-2 block text-sm font-medium text-slate-700">
@@ -255,7 +314,7 @@ export default function Step4Service({
 								disabled={!isValidCurrent}
 								className={`flex-1 rounded-2xl px-4 py-3 text-sm font-semibold transition ${
 									isValidCurrent
-										? "bg-gradient-to-r cursor-pointer from-emerald-600 to-teal-600 text-white shadow-sm hover:from-emerald-500 hover:to-teal-500"
+										? "cursor-pointer bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-sm hover:from-emerald-500 hover:to-teal-500"
 										: "cursor-not-allowed bg-slate-100 text-slate-400"
 								}`}>
 								Add Service
@@ -301,7 +360,7 @@ export default function Step4Service({
 						disabled={data.services.length === 0}
 						className={`rounded-2xl px-6 py-3 text-sm font-semibold transition ${
 							data.services.length > 0
-								? "bg-gradient-to-r cursor-pointer from-emerald-600 to-teal-600 text-white shadow-sm hover:from-emerald-500 hover:to-teal-500"
+								? "cursor-pointer bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-sm hover:from-emerald-500 hover:to-teal-500"
 								: "cursor-not-allowed bg-slate-100 text-slate-400"
 						}`}>
 						Continue →

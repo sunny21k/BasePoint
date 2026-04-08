@@ -1,4 +1,12 @@
-import { HiCheck } from "react-icons/hi";
+import {
+	HiCheck,
+	HiScissors,
+	HiAcademicCap,
+	HiSparkles,
+	HiHome,
+	HiPhotograph,
+} from "react-icons/hi";
+import { FaDumbbell, FaPaw, FaCarSide, FaTheaterMasks } from "react-icons/fa";
 
 interface Step2CategoryProps {
 	data: { category: string };
@@ -17,52 +25,57 @@ export default function Step2Category({
 		{
 			id: "hair-beauty",
 			name: "Hair & Beauty",
-			icon: "💇",
+			icon: HiScissors,
 			description: "Barbershops, salons, spas",
 		},
 		{
 			id: "fitness",
 			name: "Fitness & Wellness",
-			icon: "💪",
+			icon: FaDumbbell,
 			description: "Gyms, trainers, yoga studios",
 		},
 		{
 			id: "education",
 			name: "Education & Tutoring",
-			icon: "📚",
+			icon: HiAcademicCap,
 			description: "Tutors, music lessons, coaches",
 		},
 		{
 			id: "pet-services",
 			name: "Pet Services",
-			icon: "🐾",
+			icon: FaPaw,
 			description: "Groomers, trainers, vets",
 		},
 		{
 			id: "home-services",
 			name: "Home Services",
-			icon: "🏠",
+			icon: HiHome,
 			description: "Cleaning, repairs, landscaping",
 		},
 		{
 			id: "automotive",
 			name: "Automotive",
-			icon: "🚗",
+			icon: FaCarSide,
 			description: "Detailing, repairs, mechanics",
 		},
 		{
 			id: "creative",
 			name: "Creative & Arts",
-			icon: "🎨",
+			icon: HiPhotograph,
 			description: "Photography, art classes",
 		},
 		{
 			id: "events",
 			name: "Events & Entertainment",
-			icon: "🎭",
+			icon: FaTheaterMasks,
 			description: "DJs, photographers, planners",
 		},
-		{ id: "other", name: "Other", icon: "✨", description: "Something else" },
+		{
+			id: "other",
+			name: "Other",
+			icon: HiSparkles,
+			description: "Something else",
+		},
 	];
 
 	const handleSelect = (categoryId: string) => {
@@ -75,10 +88,7 @@ export default function Step2Category({
 	return (
 		<div className="mx-auto w-full max-w-5xl px-4">
 			<div className="rounded-[1.75rem] border border-slate-200 bg-white/90 p-6 shadow-[0_20px_60px_rgba(15,23,42,0.08)] backdrop-blur-sm lg:p-8">
-				<div className="mb-8 text-center">
-					<div className="mx-auto mb-4 inline-flex rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700">
-						Step 2 of 6
-					</div>
+				<div className="mb-10 text-center">
 					<h2 className="text-2xl font-semibold tracking-tight text-slate-900">
 						What type of business?
 					</h2>
@@ -86,11 +96,15 @@ export default function Step2Category({
 						Pick the category that best matches what you do. You can fine-tune
 						services later.
 					</p>
+					<p className="mt-2 text-xs leading-5 text-slate-400">
+						You can change this later anytime.
+					</p>
 				</div>
 
 				<div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
 					{categories.map((category) => {
 						const isActive = selected === category.id;
+						const Icon = category.icon;
 
 						return (
 							<button
@@ -108,8 +122,8 @@ export default function Step2Category({
 									</div>
 								)}
 
-								<div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-slate-100 to-white text-2xl shadow-sm">
-									{category.icon}
+								<div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-slate-100 to-white text-slate-700 shadow-sm">
+									<Icon className="h-6 w-6" />
 								</div>
 
 								<h3
@@ -149,8 +163,8 @@ export default function Step2Category({
 						disabled={!selected}
 						className={`rounded-2xl px-6 py-3 text-sm font-semibold transition ${
 							selected
-								? "bg-gradient-to-r cursor-pointer from-emerald-600 to-teal-600 text-white shadow-sm hover:from-emerald-500 hover:to-teal-500"
-								: " bg-slate-100 text-slate-400"
+								? "cursor-pointer bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-sm hover:from-emerald-500 hover:to-teal-500"
+								: "cursor-not-allowed bg-slate-100 text-slate-400"
 						}`}>
 						Continue →
 					</button>

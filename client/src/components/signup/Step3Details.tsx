@@ -1,4 +1,10 @@
 import { useState } from "react";
+import {
+	HiOutlineLocationMarker,
+	HiOutlinePhone,
+	HiOutlinePencilAlt,
+	HiOutlinePhotograph,
+} from "react-icons/hi";
 
 interface Step3DetailsProps {
 	data: {
@@ -24,9 +30,8 @@ export default function Step3Details({
 
 		if (!data.address) newErrors.address = "Address is required";
 		if (!data.phone) newErrors.phone = "Phone number is required";
-		if (!data.description) {
-			newErrors.description = "Description is required";
-		} else if (data.description.length < 20) {
+
+		if (data.description && data.description.length < 20) {
 			newErrors.description = "Description should be at least 20 characters";
 		}
 
@@ -49,6 +54,9 @@ export default function Step3Details({
 					<p className="mt-2 text-sm leading-6 text-slate-500">
 						This helps customers find you and feel confident booking.
 					</p>
+					<p className="mt-2 text-xs leading-5 text-slate-400">
+						You can change this later anytime.
+					</p>
 				</div>
 
 				<form onSubmit={handleSubmit} className="space-y-6">
@@ -56,15 +64,21 @@ export default function Step3Details({
 						<label className="mb-2 block text-sm font-medium text-slate-700">
 							Business address
 						</label>
-						<input
-							type="text"
-							value={data.address}
-							onChange={(e) => onUpdate("address", e.target.value)}
-							placeholder="123 Main St, Brooklyn, NY 11201"
-							className={`w-full rounded-2xl border bg-white px-4 py-3.5 text-sm text-slate-900 shadow-sm outline-none transition placeholder:text-slate-400 focus:border-emerald-400 focus:ring-2 focus:ring-emerald-100 ${
-								errors.address ? "border-red-400" : "border-slate-300"
-							}`}
-						/>
+						<p className="mb-3 text-xs leading-5 text-slate-500">
+							Enter the main location where customers can find you.
+						</p>
+						<div className="relative">
+							<HiOutlineLocationMarker className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400" />
+							<input
+								type="text"
+								value={data.address}
+								onChange={(e) => onUpdate("address", e.target.value)}
+								placeholder="123 Main St, Brooklyn, NY 11201"
+								className={`w-full rounded-2xl border bg-white py-3.5 pl-11 pr-4 text-sm text-slate-900 shadow-sm outline-none transition placeholder:text-slate-400 focus:border-emerald-400 focus:ring-2 focus:ring-emerald-100 ${
+									errors.address ? "border-red-400" : "border-slate-300"
+								}`}
+							/>
+						</div>
 						{errors.address && (
 							<p className="mt-1 text-xs text-red-500">{errors.address}</p>
 						)}
@@ -74,15 +88,21 @@ export default function Step3Details({
 						<label className="mb-2 block text-sm font-medium text-slate-700">
 							Phone number
 						</label>
-						<input
-							type="tel"
-							value={data.phone}
-							onChange={(e) => onUpdate("phone", e.target.value)}
-							placeholder="(555) 123-4567"
-							className={`w-full rounded-2xl border bg-white px-4 py-3.5 text-sm text-slate-900 shadow-sm outline-none transition placeholder:text-slate-400 focus:border-emerald-400 focus:ring-2 focus:ring-emerald-100 ${
-								errors.phone ? "border-red-400" : "border-slate-300"
-							}`}
-						/>
+						<p className="mb-3 text-xs leading-5 text-slate-500">
+							Customers may use this if they need to reach you quickly.
+						</p>
+						<div className="relative">
+							<HiOutlinePhone className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400" />
+							<input
+								type="tel"
+								value={data.phone}
+								onChange={(e) => onUpdate("phone", e.target.value)}
+								placeholder="(555) 123-4567"
+								className={`w-full rounded-2xl border bg-white py-3.5 pl-11 pr-4 text-sm text-slate-900 shadow-sm outline-none transition placeholder:text-slate-400 focus:border-emerald-400 focus:ring-2 focus:ring-emerald-100 ${
+									errors.phone ? "border-red-400" : "border-slate-300"
+								}`}
+							/>
+						</div>
 						{errors.phone && (
 							<p className="mt-1 text-xs text-red-500">{errors.phone}</p>
 						)}
@@ -90,23 +110,33 @@ export default function Step3Details({
 
 					<div>
 						<label className="mb-2 block text-sm font-medium text-slate-700">
-							Business description
+							Business description{" "}
+							<span className="text-slate-400">(optional)</span>
 						</label>
-						<textarea
-							value={data.description}
-							onChange={(e) => onUpdate("description", e.target.value)}
-							placeholder="Tell customers what makes your business special..."
-							rows={5}
-							className={`w-full resize-none rounded-2xl border bg-white px-4 py-3.5 text-sm text-slate-900 shadow-sm outline-none transition placeholder:text-slate-400 focus:border-emerald-400 focus:ring-2 focus:ring-emerald-100 ${
-								errors.description ? "border-red-400" : "border-slate-300"
-							}`}
-						/>
+						<p className="mb-3 text-xs leading-5 text-slate-500">
+							Share a short description if you want. This helps customers
+							understand what you do.
+						</p>
+						<div className="relative">
+							<HiOutlinePencilAlt className="pointer-events-none absolute left-4 top-4 h-5 w-5 text-slate-400" />
+							<textarea
+								value={data.description}
+								onChange={(e) => onUpdate("description", e.target.value)}
+								placeholder="Tell customers what makes your business special..."
+								rows={5}
+								className={`w-full resize-none rounded-2xl border bg-white py-3.5 pl-11 pr-4 text-sm text-slate-900 shadow-sm outline-none transition placeholder:text-slate-400 focus:border-emerald-400 focus:ring-2 focus:ring-emerald-100 ${
+									errors.description ? "border-red-400" : "border-slate-300"
+								}`}
+							/>
+						</div>
 						<div className="mt-1 flex items-center justify-between">
 							{errors.description ? (
 								<p className="text-xs text-red-500">{errors.description}</p>
 							) : (
 								<p className="text-xs text-slate-500">
-									{data.description.length} characters (minimum 20)
+									{data.description.length > 0
+										? `${data.description.length} characters`
+										: "Optional field"}
 								</p>
 							)}
 						</div>
@@ -116,13 +146,18 @@ export default function Step3Details({
 						<label className="mb-2 block text-sm font-medium text-slate-700">
 							Logo <span className="text-slate-400">(optional)</span>
 						</label>
+						<p className="mb-3 text-xs leading-5 text-slate-500">
+							Upload a logo if you have one. You can update it later anytime.
+						</p>
 						<div className="rounded-2xl border-2 border-dashed border-slate-300 bg-gradient-to-br from-slate-50 to-white p-6 text-center transition hover:border-emerald-300 hover:bg-emerald-50/50">
-							<div className="mb-2 text-3xl">📷</div>
+							<div className="mb-2 flex justify-center">
+								<HiOutlinePhotograph className="h-10 w-10 text-slate-400" />
+							</div>
 							<p className="text-sm font-medium text-slate-800">
 								Upload your logo
 							</p>
 							<p className="mt-1 text-xs text-slate-500">
-								Square images work best. You can change this later.
+								Square images work best for profiles and booking pages.
 							</p>
 							<button
 								type="button"

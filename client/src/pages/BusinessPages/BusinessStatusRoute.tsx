@@ -2,7 +2,9 @@ import { Navigate, Outlet, useLocation } from "react-router-dom";
 import { useBusinessAuth } from "./BusinessAuthContext";
 
 export default function BusinessStatusRoute() {
-	const { accountStatus, isOnBoarded, isLoading } = useBusinessAuth();
+	const { accountStatus, verificationStatus, isOnBoarded, isLoading } =
+		useBusinessAuth();
+
 	const location = useLocation();
 
 	if (isLoading) {
@@ -16,34 +18,27 @@ export default function BusinessStatusRoute() {
 		);
 	}
 
-	if (
-		accountStatus === "pending" &&
-		location.pathname !== "/business/pending"
+	// Determine where the user should go based on their status
+	let redirectPath = "";
+
+	if (verificationStatus === "not_submitted") {
+		redirectPath = "/business/verification";
+	} else if (
+		verificationStatus === "submitted" &&
+		accountStatus === "pending"
 	) {
-		return <Navigate to="/business/pending" replace />;
+		redirectPath = "/business/pending";
+	} else if (accountStatus === "rejected") {
+		redirectPath = "/business/rejected";
+	} else if (accountStatus === "approved" && !isOnBoarded) {
+		redirectPath = "/business/onboarding";
+	} else if (accountStatus === "approved" && isOnBoarded) {
+		redirectPath = "/business/dashboard";
 	}
 
-	if (
-		accountStatus === "rejected" &&
-		location.pathname !== "/business/rejected"
-	) {
-		return <Navigate to="/business/rejected" replace />;
-	}
-
-	if (
-		accountStatus === "approved" &&
-		!isOnBoarded &&
-		location.pathname !== "/business/onboarding"
-	) {
-		return <Navigate to="/business/onboarding" replace />;
-	}
-
-	if (
-		accountStatus === "approved" &&
-		isOnBoarded &&
-		!location.pathname.startsWith("/business/dashboard")
-	) {
-		return <Navigate to="/business/dashboard" replace />;
+	// If the current path does not match the correct path, redirect
+	if (redirectPath && !location.pathname.startsWith(redirectPath)) {
+		return <Navigate to={redirectPath} replace />;
 	}
 
 	return <Outlet />;

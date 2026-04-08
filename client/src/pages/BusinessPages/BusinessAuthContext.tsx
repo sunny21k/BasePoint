@@ -8,6 +8,7 @@ type BusinessAuthContextType = {
 	accountStatus: AccountStatus;
 	isOnBoarded: boolean;
 	isLoading: boolean;
+	verificationStatus: "not_submitted" | "submitted";
 	refreshAuth: () => Promise<void>;
 	logout: () => void;
 };
@@ -16,7 +17,7 @@ const BusinessAuthContext = createContext<BusinessAuthContextType | undefined>(
 	undefined,
 );
 
-const API_URL = "http://localhost:3000";
+export const API_URL = "http://localhost:3000";
 
 export function BusinessAuthProvider({
 	children,
@@ -27,6 +28,9 @@ export function BusinessAuthProvider({
 	const [accountStatus, setAccountStatus] = useState<AccountStatus>("unknown");
 	const [isOnBoarded, setIsOnBoarded] = useState(false);
 	const [isLoading, setIsLoading] = useState(true);
+	const [verificationStatus, setVerificationStatus] = useState<
+		"not_submitted" | "submitted"
+	>("not_submitted");
 
 	const fetchAuth = async () => {
 		setIsLoading(true);
@@ -37,6 +41,7 @@ export function BusinessAuthProvider({
 				setIsAuthenticated(false);
 				setAccountStatus("unknown");
 				setIsOnBoarded(false);
+				setVerificationStatus("not_submitted");
 				return;
 			}
 
@@ -50,6 +55,9 @@ export function BusinessAuthProvider({
 				setIsAuthenticated(true);
 				setAccountStatus(response.data.user.accountStatus || "unknown");
 				setIsOnBoarded(Boolean(response.data.business?.isOnBoarded));
+				setVerificationStatus(
+					response.data.user.verificationStatus || "not_submitted",
+				);
 			} else {
 				setIsAuthenticated(false);
 				setAccountStatus("unknown");
@@ -60,6 +68,7 @@ export function BusinessAuthProvider({
 			setIsAuthenticated(false);
 			setAccountStatus("unknown");
 			setIsOnBoarded(false);
+			setVerificationStatus("not_submitted");
 			localStorage.removeItem("token");
 		} finally {
 			setIsLoading(false);
@@ -72,10 +81,22 @@ export function BusinessAuthProvider({
 		setAccountStatus("unknown");
 		setIsOnBoarded(false);
 		setIsLoading(false);
+		setVerificationStatus("not_submitted");
 	};
 
 	useEffect(() => {
 		fetchAuth();
+
+		const interval = setInterval(
+			() => {
+				if (document.visibilityState === "visible") {
+					fetchAuth();
+				}
+			},
+			5 * 60 * 1000,
+		);
+
+		return () => clearInterval(interval);
 	}, []);
 
 	return (
@@ -85,6 +106,7 @@ export function BusinessAuthProvider({
 				accountStatus,
 				isOnBoarded,
 				isLoading,
+				verificationStatus,
 				refreshAuth: fetchAuth,
 				logout,
 			}}>

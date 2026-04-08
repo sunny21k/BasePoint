@@ -10,7 +10,7 @@ export default function StepIndicator({
 	totalSteps,
 }: StepIndicatorProps) {
 	const steps = [
-		{ number: 1, label: "Account" },
+		{ number: 1, label: "Preference" },
 		{ number: 2, label: "Category" },
 		{ number: 3, label: "Details" },
 		{ number: 4, label: "Service" },

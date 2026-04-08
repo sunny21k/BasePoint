@@ -16,13 +16,14 @@ export const getCurrentUser = async (req: AuthRequest, res: Response) => {
             return res.status(401).json({ message: "Not authorized" });
         }
 
-        const user = await User.findById(userId).select("-password");
+        const user = await User.findById(userId).select("-password").lean();
+        const business = await Business.findOne({ userId }).lean();
 
         if (!user) {
             return res.status(404).json({ message: "User not found" });
         }
 
-        return res.status(200).json({ user });
+        return res.status(200).json({ user, business });
     } catch (error) {
         return res.status(500).json({
             message: "Server error",
@@ -105,3 +106,33 @@ export const saveBusinessVerification = async (req: AuthRequest, res: Response) 
         });
     }
 };
+
+export const completeOnboarding = async (req: AuthRequest, res: Response) => {
+    try {
+        const userId = req.user?.id;
+
+        if (!userId) {
+            return res.status(401).json({ message: "Not authorized" });
+        }
+
+        const business = await Business.findOne({ userId });
+
+        if (!business) {
+            return res.status(404).json({ message: "Business not found" });
+        }
+
+        business.isOnBoarded = true;
+        await business.save();
+
+        return res.status(200).json({
+            message: "Onboarding completed successfully",
+            business,
+        });
+    } catch (error) {
+        console.error("completeOnboarding error:", error);
+        return res.status(500).json({
+            message: "Server error",
+            error,
+        });
+    }
+}
