@@ -72,4 +72,5 @@ const businessSchema = new Schema<IBusiness>(
 );
 
 const Business = models.Business || model<IBusiness>("Business", businessSchema);
+
 export default Business;

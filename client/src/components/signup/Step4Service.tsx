@@ -8,6 +8,8 @@ import {
 	HiOutlineSparkles,
 	HiOutlineChevronDown,
 } from "react-icons/hi";
+import { API_URL } from "../../pages/BusinessPages/BusinessAuthContext";
+import axios from "axios";
 
 interface Service {
 	name: string;
@@ -30,12 +32,39 @@ export default function Step4Service({
 	onBack,
 }: Step4ServiceProps) {
 	const [showForm, setShowForm] = useState(data.services.length === 0);
+	const [isSaving, setIsSaving] = useState(false);
 	const [currentService, setCurrentService] = useState<Service>({
 		name: "",
 		price: 0,
 		duration: 30,
 		description: "",
 	});
+
+	const handleNext = async () => {
+		try {
+			setIsSaving(true);
+
+			const token = localStorage.getItem("token");
+
+			await axios.post(
+				`${API_URL}/api/services/create-services-bulk`,
+				{
+					services: data.services,
+				},
+				{
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
+				},
+			);
+
+			onNext();
+		} catch (err) {
+			console.error("Failed to save services:", err);
+		} finally {
+			setIsSaving(false);
+		}
+	};
 
 	const templates = [
 		{
@@ -356,7 +385,7 @@ export default function Step4Service({
 
 					<button
 						type="button"
-						onClick={onNext}
+						onClick={handleNext}
 						disabled={data.services.length === 0}
 						className={`rounded-2xl px-6 py-3 text-sm font-semibold transition ${
 							data.services.length > 0

@@ -5,6 +5,7 @@ import cors from "cors";
 import authRoutes from "./routes/authRoutes";
 import businessRoutes from "./routes/businessRoutes";
 import adminRoutes from "./routes/adminRoutes"; 
+import serviceRoutes from "./routes/serviceRoutes";
 
 dotenv.config();
 
@@ -24,6 +25,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/api/auth", authRoutes);
 app.use("/api/business", businessRoutes);
 app.use("/api/admin", adminRoutes);  
+app.use("/api/services", serviceRoutes);
 
 app.get("/", (_req, res) => {
   res.send("API is running");

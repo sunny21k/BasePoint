@@ -1,5 +1,7 @@
 import DashboardLayout from "../../components/dashboard/DashboardLayout";
-import { useState } from "react";
+import { useState, useEffect, use } from "react";
+import axios from "axios";
+import { API_URL } from "../BusinessPages/BusinessAuthContext";
 
 type Service = {
 	id: string;
@@ -9,48 +11,138 @@ type Service = {
 	description: string;
 };
 
-const mockServices: Service[] = [
-	{
-		id: "haircut-men",
-		name: "Men's Haircut",
-		price: 35,
-		duration: 30,
-		description: "Classic haircut with wash and style",
-	},
-	{
-		id: "yoga-60",
-		name: "Yoga Class",
-		price: 25,
-		duration: 60,
-		description: "Group yoga session",
-	},
-	{
-		id: "massage-60",
-		name: "Massage (60min)",
-		price: 90,
-		duration: 60,
-		description: "Relaxation massage",
-	},
-];
+// const mockServices: Service[] = [
+// 	{
+// 		id: "haircut-men",
+// 		name: "Men's Haircut",
+// 		price: 35,
+// 		duration: 30,
+// 		description: "Classic haircut with wash and style",
+// 	},
+// 	{
+// 		id: "yoga-60",
+// 		name: "Yoga Class",
+// 		price: 25,
+// 		duration: 60,
+// 		description: "Group yoga session",
+// 	},
+// 	{
+// 		id: "massage-60",
+// 		name: "Massage (60min)",
+// 		price: 90,
+// 		duration: 60,
+// 		description: "Relaxation massage",
+// 	},
+// ];
 
 export default function Services() {
-	const [services, setServices] = useState<Service[]>(mockServices);
+	const [services, setServices] = useState<Service[]>([]);
 	const [editing, setEditing] = useState<Service | null>(null);
 
-	const handleDelete = (id: string) => {
-		setServices(services.filter((s) => s.id !== id));
+	const fetchServices = async () => {
+		try {
+			const token = localStorage.getItem("token");
+
+			const res = await axios.get(`${API_URL}/api/services`, {
+				headers: {
+					Authorization: `Bearer ${token}`,
+				},
+			});
+
+			const formatted = res.data.services.map((s: any) => ({
+				id: s._id,
+				name: s.name,
+				price: s.price,
+				duration: s.duration,
+				description: s.description || "",
+			}));
+
+			setServices(formatted);
+		} catch (err) {
+			console.error("Failed to fetch services", err);
+		}
 	};
 
-	const handleSave = () => {
+	useEffect(() => {
+		fetchServices();
+	}, []);
+
+	const handleDelete = async (id: string) => {
+		try {
+			const token = localStorage.getItem("token");
+
+			await axios.delete(`${API_URL}/api/services/${id}`, {
+				headers: {
+					Authorization: `Bearer ${token}`,
+				},
+			});
+
+			await fetchServices();
+		} catch (err) {
+			console.error("Failed to delete service", err);
+		}
+	};
+
+	const handleSave = async () => {
 		if (!editing) return;
 
-		if (services.some((s) => s.id === editing.id)) {
-			setServices(services.map((s) => (s.id === editing.id ? editing : s)));
-		} else {
-			setServices([...services, editing]);
-		}
+		try {
+			const token = localStorage.getItem("token");
 
-		setEditing(null);
+			// UPDATE
+			if (services.some((s) => s.id === editing.id)) {
+				const res = await axios.put(
+					`${API_URL}/api/services/${editing.id}`,
+					editing,
+					{
+						headers: {
+							Authorization: `Bearer ${token}`,
+						},
+					},
+				);
+
+				const updated = res.data.service;
+
+				setServices((prev) =>
+					prev.map((s) =>
+						s.id === editing.id
+							? {
+									id: updated._id,
+									name: updated.name,
+									price: updated.price,
+									duration: updated.duration,
+									description: updated.description || "",
+								}
+							: s,
+					),
+				);
+			}
+			// CREATE
+			else {
+				const res = await axios.post(`${API_URL}/api/services`, editing, {
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
+				});
+
+				const created = res.data.service;
+
+				setServices((prev) => [
+					...prev,
+					{
+						id: created._id,
+						name: created.name,
+						price: created.price,
+						duration: created.duration,
+						description: created.description || "",
+					},
+				]);
+			}
+
+			setEditing(null);
+		} catch (err) {
+			console.error("Save failed", err);
+		}
 	};
 
 	const handleCancel = () => {
