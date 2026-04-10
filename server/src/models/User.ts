@@ -7,6 +7,8 @@ export interface IUser {
     accountStatus: "pending" | "approved" | "rejected";
     verificationStatus: "not_submitted" | "submitted";
     businessName?: string;
+    ownerName?: string;
+    phone?: string;
 }
 
 const UserSchema = new Schema<IUser>(
@@ -42,6 +44,16 @@ const UserSchema = new Schema<IUser>(
             default: "not_submitted",
         },
         businessName: {
+            type: String,
+            trim: true,
+            default: "",
+        },
+        ownerName: {
+            type: String,
+            trim: true,
+            default: "",
+        },
+        phone: {
             type: String,
             trim: true,
             default: "",
