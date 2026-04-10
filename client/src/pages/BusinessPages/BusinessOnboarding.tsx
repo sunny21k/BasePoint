@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import StepIndicator from "../../components/signup/StepIndicator";
 import Step1Preferences from "../../components/signup/Step1Preferences";
@@ -8,9 +8,10 @@ import Step4Service from "../../components/signup/Step4Service";
 import Step5Hours from "../../components/signup/Step5Hours";
 import Step6Success from "../../components/signup/Step6Success";
 
+import axios from "axios";
+import { API_URL } from "../BusinessPages/BusinessAuthContext";
+
 interface SignupData {
-	email: string;
-	password: string;
 	businessName: string;
 	category: string;
 	address: string;
@@ -19,8 +20,10 @@ interface SignupData {
 	preferences: {
 		bookingType: "in-person" | "online" | "both";
 		bufferTime: number;
-		maxBookingsPerDay: number;
 		allowCancellations: boolean;
+		cancellationFee: number;
+		cancellationFeeType: "dollar" | "percent";
+		cancellationWindow: number;
 	};
 	services: Array<{
 		name: string;
@@ -33,9 +36,8 @@ interface SignupData {
 
 export default function BusinessOnboarding() {
 	const [currentStep, setCurrentStep] = useState(1);
+	const [loading, setLoading] = useState(true);
 	const [formData, setFormData] = useState<SignupData>({
-		email: "",
-		password: "",
 		businessName: "",
 		category: "",
 		address: "",
@@ -44,8 +46,10 @@ export default function BusinessOnboarding() {
 		preferences: {
 			bookingType: "in-person",
 			bufferTime: 0,
-			maxBookingsPerDay: 10,
 			allowCancellations: true,
+			cancellationFee: 0,
+			cancellationFeeType: "dollar",
+			cancellationWindow: 0,
 		},
 		services: [],
 		hours: {
@@ -59,12 +63,105 @@ export default function BusinessOnboarding() {
 		},
 	});
 
+	// Load existing business data on mount
+	useEffect(() => {
+		const loadBusinessData = async () => {
+			try {
+				const token = localStorage.getItem("token");
+				if (!token) {
+					setLoading(false);
+					return;
+				}
+
+				const { data } = await axios.get(`${API_URL}/api/business/me`, {
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
+				});
+
+				if (data.business) {
+					setFormData((prev) => ({
+						...prev,
+						businessName: data.business.businessName || "",
+						category: data.business.businessType || "",
+						address: data.business.businessAddress || "",
+						phone: data.business.phone || "",
+						description: data.business.description || "",
+						preferences: data.business.preferences || prev.preferences,
+						hours: data.business.hours || prev.hours,
+					}));
+				}
+			} catch (err) {
+				console.error("Failed to load business data", err);
+			} finally {
+				setLoading(false);
+			}
+		};
+
+		loadBusinessData();
+	}, []);
+
 	const updateField = (field: string, value: any) => {
 		setFormData((prev) => ({ ...prev, [field]: value }));
 	};
 
-	const nextStep = () => setCurrentStep((prev) => Math.min(prev + 1, 6));
+	const nextStep = async () => {
+		// Save when leaving step 5 (going to step 6 - the success page)
+		if (currentStep === 5) {
+			try {
+				const token = localStorage.getItem("token");
+
+				const payload = {
+					businessName: formData.businessName,
+					category: formData.category,
+					address: formData.address,
+					phone: formData.phone,
+					description: formData.description,
+					preferences: formData.preferences,
+					hours: formData.hours,
+					services: formData.services,
+				};
+
+				console.log("Sending payload:", payload); // Debug log
+
+				await axios.post(
+					`${API_URL}/api/business/complete-onboarding`,
+					payload,
+					{
+						headers: {
+							Authorization: `Bearer ${token}`,
+						},
+					},
+				);
+			} catch (err: unknown) {
+				if (axios.isAxiosError(err)) {
+					console.error(
+						"Failed to save business data",
+						err.response?.data || err.message,
+					);
+				} else if (err) {
+					console.error("Error response:", err);
+				}
+				return; // Don't proceed to next step if save fails
+			}
+		}
+
+		setCurrentStep((prev) => Math.min(prev + 1, 6));
+	};
+
 	const prevStep = () => setCurrentStep((prev) => Math.max(prev - 1, 1));
+
+	// Show loading state while fetching data
+	if (loading) {
+		return (
+			<div className="flex min-h-screen items-center justify-center bg-[radial-gradient(circle_at_top,rgba(16,185,129,0.12),transparent_28%),linear-gradient(180deg,#f8fafc_0%,#ecfeff_46%,#ffffff_100%)]">
+				<div className="text-center">
+					<div className="mb-4 inline-block h-12 w-12 animate-spin rounded-full border-4 border-emerald-200 border-t-emerald-600"></div>
+					<p className="text-slate-600">Loading your business data...</p>
+				</div>
+			</div>
+		);
+	}
 
 	return (
 		<div className="min-h-screen bg-[radial-gradient(circle_at_top,rgba(16,185,129,0.12),transparent_28%),linear-gradient(180deg,#f8fafc_0%,#ecfeff_46%,#ffffff_100%)] text-slate-900">

@@ -32,25 +32,11 @@ export default function Step6Success({ businessName }: Step6SuccessProps) {
 
 	const completeOnboarding = async () => {
 		try {
-			const token = localStorage.getItem("token");
-
-			if (!token) throw new Error("No token found");
-
-			// Complete onboarding on backend
-			await axios.post(
-				`${API_URL}/api/business/complete-onboarding`,
-				{},
-				{
-					headers: { Authorization: `Bearer ${token}` },
-				},
-			);
-
-			// Refresh context to update isOnBoarded
+			// Just refresh auth and navigate - data is already saved
 			await refreshAuth();
-
 			navigate("/business/dashboard", { replace: true });
 		} catch (err) {
-			console.error("Onboarding failed:", err);
+			console.error("Navigation failed:", err);
 		}
 	};
 

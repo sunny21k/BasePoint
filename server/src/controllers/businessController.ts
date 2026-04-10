@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import User from "../models/User";
 import Business from "../models/Business";
+import Service from "../models/Service";
 
 interface AuthRequest extends Request {
     user?: {
@@ -108,31 +109,71 @@ export const saveBusinessVerification = async (req: AuthRequest, res: Response) 
 };
 
 export const completeOnboarding = async (req: AuthRequest, res: Response) => {
-    try {
-        const userId = req.user?.id;
+	try {
+		const userId = req.user?.id;
 
-        if (!userId) {
-            return res.status(401).json({ message: "Not authorized" });
-        }
+		if (!userId) {
+			return res.status(401).json({ message: "Not authorized" });
+		}
 
-        const business = await Business.findOne({ userId });
+		const {
+			businessName,
+			category,
+			address,
+			phone,
+			description,
+			preferences,
+			hours,
+			services,
+		} = req.body;
 
-        if (!business) {
-            return res.status(404).json({ message: "Business not found" });
-        }
+		const business = await Business.findOne({ userId });
 
-        business.isOnBoarded = true;
-        await business.save();
+		if (!business) {
+			return res.status(404).json({ message: "Business not found" });
+		}
 
-        return res.status(200).json({
-            message: "Onboarding completed successfully",
-            business,
-        });
-    } catch (error) {
-        console.error("completeOnboarding error:", error);
-        return res.status(500).json({
-            message: "Server error",
-            error,
-        });
-    }
-}
+		business.businessName = businessName;
+		business.businessType = category;
+		business.businessAddress = address;
+		business.phone = phone;
+		business.description = description || "";
+
+		// PREFERENCES (Step 1)
+		business.preferences = preferences;
+
+		// HOURS (Step 5)
+		business.hours = hours;
+
+		// MARK COMPLETE
+		business.isOnBoarded = true;
+
+		await business.save();
+
+		// SERVICES (Step 4)
+		if (services && services.length > 0) {
+			// clear old (important for re-onboarding / edits)
+			await Service.deleteMany({ businessId: business._id });
+
+			const formattedServices = services.map((s: any) => ({
+				businessId: business._id,
+				name: s.name,
+				price: s.price,
+				duration: s.duration,
+				description: s.description || "",
+			}));
+
+			await Service.insertMany(formattedServices);
+		}
+
+		return res.status(200).json({
+			message: "Onboarding completed successfully",
+			business,
+		});
+	} catch (error) {
+		console.error("completeOnboarding error:", error);
+		return res.status(500).json({
+			message: "Server error",
+		});
+	}
+};

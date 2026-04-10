@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useBusinessAuth } from "./BusinessAuthContext";
 import {
@@ -30,6 +30,7 @@ export default function BusinessVerification() {
 	const navigate = useNavigate();
 	const [currentStep, setCurrentStep] = useState(1);
 	const [isLoading, setIsLoading] = useState(false);
+	const [loading, setLoading] = useState(true);
 	const [errors, setErrors] = useState<Record<string, string>>({});
 	const [formData, setFormData] = useState({
 		ownerName: "",
@@ -41,6 +42,49 @@ export default function BusinessVerification() {
 		websiteOrSocial: "",
 		description: "",
 	});
+
+	// Load existing user/business data on mount
+	useEffect(() => {
+		const loadUserData = async () => {
+			try {
+				const token = localStorage.getItem("token");
+				if (!token) {
+					setLoading(false);
+					return;
+				}
+
+				const { data } = await axios.get(
+					"http://localhost:3000/api/business/me",
+					{
+						headers: {
+							Authorization: `Bearer ${token}`,
+						},
+					},
+				);
+
+				// Pre-fill form with existing data
+				if (data.user || data.business) {
+					setFormData({
+						ownerName: data.business?.ownerName || data.user?.ownerName || "",
+						email: data.business?.email || data.user?.email || "",
+						phone: data.business?.phone || data.user?.phone || "",
+						businessName:
+							data.business?.businessName || data.user?.businessName || "",
+						businessType: data.business?.businessType || "",
+						businessAddress: data.business?.businessAddress || "",
+						websiteOrSocial: data.business?.websiteOrSocial || "",
+						description: data.business?.description || "",
+					});
+				}
+			} catch (err) {
+				console.error("Failed to load user data", err);
+			} finally {
+				setLoading(false);
+			}
+		};
+
+		loadUserData();
+	}, []);
 
 	const validateStep = (step: number) => {
 		const newErrors: Record<string, string> = {};
@@ -113,6 +157,18 @@ export default function BusinessVerification() {
 			setIsLoading(false);
 		}
 	};
+
+	// Show loading state while fetching data
+	if (loading) {
+		return (
+			<div className="flex min-h-screen items-center justify-center bg-sky-50">
+				<div className="text-center">
+					<div className="mb-4 inline-block h-12 w-12 animate-spin rounded-full border-4 border-sky-200 border-t-sky-600"></div>
+					<p className="text-slate-600">Loading your information...</p>
+				</div>
+			</div>
+		);
+	}
 
 	return (
 		<div className="min-h-screen bg-sky-50 px-6 py-12 text-slate-900">
