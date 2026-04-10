@@ -66,7 +66,19 @@ export const loginAdmin = async (req: Request, res: Response) => {
 export const getAllBusinesses = async (req: Request, res: Response) => {
     try {
         const businesses = await Business.find().sort({ createdAt: -1 });
-        return res.status(200).json(businesses);
+
+        const users = await User.find({
+            _id: { $in: businesses.map((b) => b.userId) },
+        }).select("_id accountStatus");
+
+        const userMap = new Map(users.map((u) => [u._id.toString(), u.accountStatus]));
+
+        const result = businesses.map((business) => ({
+            ...business.toObject(),
+            accountStatus: userMap.get(business.userId.toString()) || "pending",
+        }));
+
+        return res.status(200).json(result);
     } catch (error) {
         return res.status(500).json({
             message: "Failed to fetch businesses",
