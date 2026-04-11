@@ -10,6 +10,7 @@ import {
 	HiPhone,
 } from "react-icons/hi";
 import axios from "axios";
+import { API_URL } from "../BusinessPages/BusinessAuthContext";
 
 export default function CustomerSignup() {
 	const navigate = useNavigate();
@@ -66,15 +67,12 @@ export default function CustomerSignup() {
 		setErrors({});
 
 		try {
-			const response = await axios.post(
-				"http://localhost:3000/api/auth/customer-signup",
-				{
-					ownerName: formData.ownerName,
-					email: formData.email,
-					password: formData.password,
-					phone: formData.phone,
-				},
-			);
+			const response = await axios.post(`${API_URL}/api/auth/customer-signup`, {
+				ownerName: formData.ownerName,
+				email: formData.email,
+				password: formData.password,
+				phone: formData.phone,
+			});
 
 			console.log("Signup success:", response.data);
 
@@ -82,7 +80,7 @@ export default function CustomerSignup() {
 
 			// Save token and role
 			localStorage.setItem("token", token);
-			localStorage.setItem("role", user.role); // ADD THIS!
+			localStorage.setItem("role", user.role);
 
 			// Redirect to customer home
 			navigate("/customer/home", { replace: true });

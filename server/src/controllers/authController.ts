@@ -39,7 +39,7 @@ export const registerCustomer = async (req: Request, res: Response) => {
             role: "customer",
             ownerName,
             phone,
-            accountStatus: "active",
+            accountStatus: "pending",
         });
 
         return res.status(201).json({

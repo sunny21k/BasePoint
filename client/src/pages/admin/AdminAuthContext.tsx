@@ -49,7 +49,7 @@ export const AdminAuthProvider = ({
 
 	const login = async (email: string, password: string) => {
 		const res = await axios.post<AdminLoginResponse>(
-			"http://localhost:5000/api/admin/login",
+			"http://localhost:3000/api/admin/login",
 			{ email, password },
 		);
 

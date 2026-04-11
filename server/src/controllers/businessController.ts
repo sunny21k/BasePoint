@@ -177,3 +177,24 @@ export const completeOnboarding = async (req: AuthRequest, res: Response) => {
 		});
 	}
 };
+
+export const updateBusinessSettings = async (req: AuthRequest, res: Response) => {
+    try {
+        const userId = req.user?.id;
+        if (!userId) return res.status(401).json({ message: "Not authorized" });
+
+        const { hours, preferences } = req.body;
+
+        const business = await Business.findOne({ userId });
+        if (!business) return res.status(404).json({ message: "Business not found" });
+
+        if (hours) business.hours = hours;
+        if (preferences) business.preferences = { ...business.preferences, ...preferences };
+
+        await business.save();
+
+        return res.status(200).json({ message: "Settings updated successfully", business });
+    } catch (error) {
+        return res.status(500).json({ message: "Failed to update settings" });
+    }
+};

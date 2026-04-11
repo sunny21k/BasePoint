@@ -1,5 +1,8 @@
 import DashboardLayout from "../../components/dashboard/DashboardLayout";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { API_URL } from "../BusinessPages/BusinessAuthContext";
+import axios from "axios";
+import { HiCheckCircle, HiCheck, HiExclamationCircle } from "react-icons/hi";
 
 type BusinessHours = {
 	day: string;
@@ -45,6 +48,54 @@ const weekdays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 export default function Settings() {
 	const [settings, setSettings] = useState(initialSettings);
 	const [hours, setHours] = useState(initialHours);
+	const [isSaving, setIsSaving] = useState(false);
+	const [saved, setSaved] = useState(false);
+	const [saveError, setSaveError] = useState("");
+
+	const capitalize = (str: string) =>
+		str.charAt(0).toUpperCase() + str.slice(1);
+
+	const fetchSettings = async () => {
+		try {
+			const token = localStorage.getItem("token");
+
+			const res = await axios.get(`${API_URL}/api/business/me`, {
+				headers: {
+					Authorization: `Bearer ${token}`,
+				},
+			});
+
+			const business = res.data.business;
+			if (!business) return;
+
+			setSettings((prev) => ({
+				...prev,
+				businessName: business.businessName || "",
+				phone: business.phone || "",
+				email: business.email || "",
+				address: business.businessAddress || "",
+				bufferTime: business.preferences?.bufferTime || 0,
+			}));
+
+			if (business.hours) {
+				const formattedHours = Object.entries(business.hours).map(
+					([day, value]: any) => ({
+						day: capitalize(day),
+						isOpen: value.isOpen,
+						open: value.open,
+						close: value.close,
+					}),
+				);
+				setHours(formattedHours);
+			}
+		} catch (error) {
+			console.error("Failed to fetch settings:", error);
+		}
+	};
+
+	useEffect(() => {
+		fetchSettings();
+	}, []);
 
 	const updateHour = (
 		index: number,
@@ -56,8 +107,46 @@ export default function Settings() {
 		setHours(next);
 	};
 
-	const handleSave = () => {
-		console.log({ settings, hours });
+	const handleSave = async () => {
+		try {
+			setIsSaving(true);
+			setSaved(false);
+			setSaveError("");
+
+			const token = localStorage.getItem("token");
+
+			const formattedHours = hours.reduce((acc, item) => {
+				acc[item.day.toLowerCase()] = {
+					isOpen: item.isOpen,
+					open: item.open,
+					close: item.close,
+				};
+				return acc;
+			}, {} as any);
+
+			await axios.put(
+				`${API_URL}/api/business/update-settings`,
+				{
+					hours: formattedHours,
+					preferences: {
+						bufferTime: settings.bufferTime,
+					},
+				},
+				{
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
+				},
+			);
+
+			setSaved(true);
+			window.setTimeout(() => setSaved(false), 3000);
+		} catch (error) {
+			console.error("Failed to save settings:", error);
+			setSaveError("Could not save settings. Please try again.");
+		} finally {
+			setIsSaving(false);
+		}
 	};
 
 	return (
@@ -107,8 +196,47 @@ export default function Settings() {
 					</div>
 				</div>
 
+				{saved && (
+					<div className="mb-6 animate-[slideDown_.25s_ease-out] rounded-[1.75rem] border border-emerald-200 bg-gradient-to-r from-emerald-50 via-white to-teal-50 px-5 py-4 shadow-[0_10px_30px_rgba(16,185,129,0.14)]">
+						<div className="flex items-start gap-4">
+							<div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-emerald-100">
+								<HiCheckCircle className="h-7 w-7 text-emerald-600" />
+							</div>
+							<div className="flex-1">
+								<p className="text-base font-semibold text-emerald-800">
+									Settings saved
+								</p>
+								<p className="mt-1 text-sm leading-6 text-emerald-700/80">
+									Your hours and preferences are now live.
+								</p>
+							</div>
+							<div className="mt-1 inline-flex items-center rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-700">
+								Updated
+							</div>
+						</div>
+					</div>
+				)}
+
+				{saveError && (
+					<div className="mb-6 rounded-[1.75rem] border border-rose-200 bg-rose-50 px-5 py-4 shadow-sm">
+						<div className="flex items-start gap-4">
+							<div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-rose-100">
+								<HiExclamationCircle className="h-7 w-7 text-rose-600" />
+							</div>
+							<div>
+								<p className="text-base font-semibold text-rose-800">
+									Save failed
+								</p>
+								<p className="mt-1 text-sm leading-6 text-rose-700">
+									{saveError}
+								</p>
+							</div>
+						</div>
+					</div>
+				)}
+
 				<div className="grid gap-6 xl:grid-cols-12">
-					<section className="xl:col-span-5 rounded-[1.75rem] border border-slate-200 bg-white p-5 shadow-sm">
+					<section className="rounded-[1.75rem] border border-slate-200 bg-white p-5 shadow-sm xl:col-span-5">
 						<div className="mb-5 flex items-center justify-between">
 							<h2 className="text-sm font-semibold text-slate-900">
 								Business profile
@@ -249,7 +377,7 @@ export default function Settings() {
 						</div>
 					</section>
 
-					<section className="xl:col-span-7 rounded-[1.75rem] border border-slate-200 bg-white p-5 shadow-sm">
+					<section className="rounded-[1.75rem] border border-slate-200 bg-white p-5 shadow-sm xl:col-span-7">
 						<div className="mb-5 flex items-center justify-between">
 							<h2 className="text-sm font-semibold text-slate-900">
 								Business hours
@@ -312,8 +440,27 @@ export default function Settings() {
 					<button
 						type="button"
 						onClick={handleSave}
-						className="cursor-pointer rounded-2xl bg-gradient-to-r from-teal-600 to-emerald-600 px-6 py-3 text-sm font-semibold text-white shadow-sm transition hover:from-teal-500 hover:to-emerald-500">
-						Save settings
+						disabled={isSaving}
+						className={`inline-flex items-center gap-2 rounded-2xl px-6 py-3 text-sm font-semibold text-white shadow-sm transition ${
+							isSaving
+								? "cursor-not-allowed bg-slate-400"
+								: saved
+									? "bg-emerald-600"
+									: "bg-gradient-to-r from-teal-600 cursor-pointer to-emerald-600 hover:from-teal-500 hover:to-emerald-500"
+						}`}>
+						{isSaving ? (
+							<>
+								<div className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
+								Saving...
+							</>
+						) : saved ? (
+							<>
+								<HiCheck className="h-4 w-4" />
+								Saved
+							</>
+						) : (
+							"Save settings"
+						)}
 					</button>
 				</div>
 			</div>
