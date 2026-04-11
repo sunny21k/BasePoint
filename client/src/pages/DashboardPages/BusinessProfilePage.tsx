@@ -179,10 +179,12 @@ export default function BusinessProfilePage() {
 						className="text-sm font-semibold text-sky-700 hover:text-sky-800">
 						← Back to dashboard
 					</Link>
-					<button className="inline-flex items-center gap-2 rounded-2xl bg-slate-900 px-4 py-2 text-sm font-semibold text-white transition hover:bg-slate-800">
+					<Link
+						to="/business/dashboard/profile/edit"
+						className="inline-flex cursor-pointer items-center gap-2 rounded-2xl bg-slate-900 px-4 py-2 text-sm font-semibold text-white transition hover:bg-slate-800">
 						<FiEdit3 className="h-4 w-4" />
 						Edit business
-					</button>
+					</Link>
 				</div>
 
 				<div className="grid gap-8 lg:grid-cols-[1.3fr_0.7fr]">

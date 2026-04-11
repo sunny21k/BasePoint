@@ -9,6 +9,7 @@ import {
     getPublicBusinessBySlug,
     getBusinessReviews,
     createBusinessReview,
+    updateBusinessProfile
 } from "../controllers/businessController";
 
 const router = Router();
@@ -22,5 +23,6 @@ router.get("/public", getPublicBusinesses);
 router.get("/public/:slug", getPublicBusinessBySlug);
 router.get("/public/:slug/reviews", getBusinessReviews);
 router.post("/public/:slug/reviews", authMiddleware, createBusinessReview);
+router.put("/update-profile", authMiddleware, updateBusinessProfile);
 
 export default router;

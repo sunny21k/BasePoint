@@ -358,3 +358,104 @@ export const createBusinessReview = async (req: AuthRequest, res: Response) => {
         });
     }
 };
+
+export const updateBusinessProfile = async (req: AuthRequest, res: Response) => {
+    try {
+        const userId = req.user?.id;
+        if (!userId) {
+            return res.status(401).json({ message: "Not authorized" });
+        }
+
+        const business = await Business.findOne({ userId });
+        if (!business) {
+            return res.status(404).json({ message: "Business not found" });
+        }
+
+        const {
+            businessName,
+            tagline,
+            category,
+            ownerName,
+            email,
+            phone,
+            businessAddress,
+            serviceArea,
+            websiteOrSocial,
+            bookingLink,
+            instagram,
+            facebook,
+            tiktok,
+            description,
+            holidayHours,
+            attributes,
+            preferences,
+            hours,
+            services,
+            faq,
+            galleryImages,
+        } = req.body;
+
+        if (businessName !== undefined) business.businessName = businessName;
+        if (tagline !== undefined) business.tagline = tagline;
+        if (category !== undefined) business.category = category;
+        if (ownerName !== undefined) business.ownerName = ownerName;
+        if (email !== undefined) business.email = email;
+        if (phone !== undefined) business.phone = phone;
+        if (businessAddress !== undefined) business.businessAddress = businessAddress;
+        if (serviceArea !== undefined) business.serviceArea = serviceArea;
+        if (websiteOrSocial !== undefined) business.websiteOrSocial = websiteOrSocial;
+        if (bookingLink !== undefined) business.bookingLink = bookingLink;
+        if (instagram !== undefined) business.instagram = instagram;
+        if (facebook !== undefined) business.facebook = facebook;
+        if (tiktok !== undefined) business.tiktok = tiktok;
+        if (description !== undefined) business.description = description;
+        if (holidayHours !== undefined) business.holidayHours = holidayHours;
+
+        if (Array.isArray(attributes)) {
+            business.attributes = attributes;
+        }
+
+        if (preferences) {
+            business.preferences = {
+                ...(business.preferences || {}),
+                ...preferences,
+            };
+        }
+
+        if (hours) {
+            business.hours = {
+                ...(business.hours || {}),
+                ...hours,
+            };
+        }
+
+        if (Array.isArray(services)) {
+            business.services = services;
+        }
+
+        if (Array.isArray(faq)) {
+            business.faq = faq;
+        }
+
+        if (Array.isArray(galleryImages)) {
+            business.galleryImages = galleryImages;
+        }
+
+        if (hours) business.markModified("hours");
+        if (preferences) business.markModified("preferences");
+
+        await business.save();
+
+        return res.status(200).json({
+            message: "Profile updated successfully",
+            business,
+        });
+    } catch (error: any) {
+        console.error("updateBusinessProfile error:", error);
+        return res.status(500).json({
+            message: "Failed to update profile",
+            error: error?.message || "Unknown error",
+            name: error?.name,
+        });
+    }
+};

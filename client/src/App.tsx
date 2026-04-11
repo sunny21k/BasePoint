@@ -18,6 +18,7 @@ import DashboardPayment from "./pages/DashboardPages/DashboardPayment";
 import DashboardSettings from "./pages/DashboardPages/DashboardSettings";
 import Subscriptions from "./pages/DashboardPages/SubscriptionPage";
 import BusinessProfilePage from "./pages/DashboardPages/BusinessProfilePage";
+import BusinessEditPage from "./pages/BusinessPages/BusinessEditPage";
 
 import Search from "./pages/Search";
 import CustomerLogin from "./pages/CustomerPages/CustomerLogin";
@@ -95,6 +96,10 @@ function App() {
 								<Route
 									path="/business/dashboard/profile"
 									element={<BusinessProfilePage />}
+								/>
+								<Route
+									path="/business/dashboard/profile/edit"
+									element={<BusinessEditPage />}
 								/>
 								<Route
 									path="/business/dashboard/calendar"
