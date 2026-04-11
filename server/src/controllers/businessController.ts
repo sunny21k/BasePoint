@@ -59,6 +59,15 @@ export const saveBusinessVerification = async (req: AuthRequest, res: Response) 
             });
         }
 
+        const makeSlug = (name: string) =>
+            name
+                .toLowerCase()
+                .trim()
+                .replace(/[^a-z0-9]+/g, "-")
+                .replace(/^-+|-+$/g, "");
+
+        const slug = makeSlug(businessName);
+
         const user = await User.findById(userId);
         if (!user) {
             return res.status(404).json({ message: "User not found" });
@@ -69,6 +78,7 @@ export const saveBusinessVerification = async (req: AuthRequest, res: Response) 
         if (business) {
             business.ownerName = ownerName;
             business.businessName = businessName;
+            business.slug = slug;
             business.email = email;
             business.phone = phone;
             business.businessType = businessType;
@@ -81,6 +91,7 @@ export const saveBusinessVerification = async (req: AuthRequest, res: Response) 
                 userId,
                 ownerName,
                 businessName,
+                slug,
                 email,
                 phone,
                 businessType,
@@ -102,9 +113,17 @@ export const saveBusinessVerification = async (req: AuthRequest, res: Response) 
         });
     } catch (error: any) {
         console.error("saveBusinessVerification error:", error);
-        return res.status(500).json({
-            message: "Server error",
+
+        if (error.code === 11000) {
+            return res.status(409).json({
+                message: "Email already exists.",
+            });
+        }
+
+        return res.status(error.name === "ValidationError" ? 400 : 500).json({
+            message: error.name === "ValidationError" ? "Validation failed" : "Server error",
             errorMessage: error?.message || "Unknown error",
+            errors: error.errors,
         });
     }
 };
